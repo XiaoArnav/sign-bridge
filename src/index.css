@@ -1,0 +1,232 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  html, body {
+    background-color: #0B1220;
+    color: #E8EEF7;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    height: 100%;
+    width: 100%;
+  }
+
+  /* Prevent text size adjustment on orientation changes */
+  body {
+    -webkit-text-size-adjust: 100%;
+  }
+}
+
+/* ── Restrained Cyber Trace Surfaces ───────────────────────────────────────── */
+.rasta-surface {
+  background-color: #151F30;
+  border: 1px solid #24344E;
+  border-radius: 1rem;
+  transition: all 0.2s ease;
+}
+
+.rasta-surface-interactive {
+  background-color: #151F30;
+  border: 1px solid #24344E;
+  border-radius: 1rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.rasta-surface-interactive:hover {
+  border-color: rgba(67, 217, 194, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6);
+}
+.rasta-surface-interactive:active {
+  transform: translateY(0);
+}
+
+/* ── Standardized Accessible Buttons (min 44px height) ─────────────────────── */
+.btn-rasta-primary {
+  min-height: 44px;
+  background-color: #E11D48;
+  color: #FFFFFF;
+  font-weight: 700;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border: none;
+  touch-action: manipulation;
+}
+.btn-rasta-primary:hover {
+  background-color: #F43F5E;
+}
+.btn-rasta-primary:active {
+  transform: scale(0.98);
+}
+.btn-rasta-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-rasta-teal {
+  min-height: 44px;
+  background-color: #43D9C2;
+  color: #0B1220;
+  font-weight: 700;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border: none;
+  touch-action: manipulation;
+}
+.btn-rasta-teal:hover {
+  background-color: #38C5B0;
+}
+.btn-rasta-teal:active {
+  transform: scale(0.98);
+}
+
+.btn-rasta-secondary {
+  min-height: 44px;
+  background-color: #1A273D;
+  color: #E8EEF7;
+  border: 1px solid #24344E;
+  font-weight: 600;
+  padding: 0.625rem 1rem;
+  border-radius: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.btn-rasta-secondary:hover {
+  background-color: #24344E;
+}
+.btn-rasta-secondary:active {
+  transform: scale(0.98);
+}
+
+/* ── Standardized Accessible Badges ────────────────────────────────────────── */
+.badge-critical {
+  background-color: rgba(239, 68, 68, 0.12);
+  color: #F87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  font-weight: 700;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.badge-high {
+  background-color: rgba(245, 158, 11, 0.12);
+  color: #FBBF24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  font-weight: 700;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.badge-medium {
+  background-color: rgba(96, 165, 250, 0.12);
+  color: #60A5FA;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  font-weight: 700;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.badge-verified {
+  background-color: rgba(52, 211, 153, 0.12);
+  color: #34D399;
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  font-weight: 700;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* ── Safe Area Mobile Navigation Bar ───────────────────────────────────────── */
+.safe-bottom-nav {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+}
+
+/* ── Leaflet Dark Theme & Responsive Overrides ─────────────────────────────── */
+.leaflet-container {
+  background: #0B1220 !important;
+  font-family: inherit !important;
+  z-index: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #151F30 !important;
+  color: #E8EEF7 !important;
+  border: 1px solid #24344E !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.7) !important;
+  padding: 0 !important;
+}
+
+.leaflet-popup-content {
+  margin: 0.75rem !important;
+}
+
+.leaflet-popup-tip {
+  background: #151F30 !important;
+  border: 1px solid #24344E !important;
+}
+
+/* Position Leaflet attribution neatly above bottom navigation on mobile */
+@media (max-width: 1023px) {
+  .leaflet-bottom.leaflet-right {
+    bottom: 5.5rem !important;
+  }
+}
+
+/* ── Clean Scrollbars ──────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #0B1220;
+}
+::-webkit-scrollbar-thumb {
+  background: #24344E;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #43D9C2;
+}
