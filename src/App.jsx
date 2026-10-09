@@ -22,7 +22,33 @@ function AppleLoadingFallback() {
 
 export default function App() {
   // Navigation states: 'home' | 'map' | 'report' | 'track' | 'alerts' | 'profile' | 'authority'
-  const [currentView, setCurrentView] = useState('home')
+  const [currentView, setCurrentView] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace('#', '')
+      if (['home', 'map', 'report', 'track', 'alerts', 'profile', 'authority'].includes(hash)) {
+        return hash
+      }
+    }
+    return 'home'
+  })
+
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash.replace('#', '')
+      if (['home', 'map', 'report', 'track', 'alerts', 'profile', 'authority'].includes(hash)) {
+        setCurrentView(hash)
+      }
+    }
+    window.addEventListener('hashchange', handleHash)
+    return () => window.removeEventListener('hashchange', handleHash)
+  }, [])
+
+  const handleNavigate = (view) => {
+    setCurrentView(view)
+    if (typeof window !== 'undefined') {
+      window.location.hash = view === 'home' ? '' : view
+    }
+  }
 
   const isAuthorityView = currentView === 'authority'
 
@@ -32,7 +58,7 @@ export default function App() {
       {!isAuthorityView && (
         <header className="hidden lg:flex items-center justify-between px-8 h-14 bg-white/80 backdrop-blur-md border-b border-[#E5E5EA] sticky top-0 z-40 flex-shrink-0 transition-all">
           {/* Brand Logo & Wordmark */}
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentView('home')}>
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => handleNavigate('home')}>
             <div className="w-7 h-7 rounded-lg bg-[#0071E3] flex items-center justify-center text-white font-bold text-sm">
               R
             </div>
@@ -55,10 +81,10 @@ export default function App() {
               return (
                 <button
                   key={id}
-                  onClick={() => setCurrentView(id)}
+                  onClick={() => handleNavigate(id)}
                   className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer text-[13px] ${
                     isActive
-                      ? 'bg-[#1D1D1F] text-white font-semibold'
+                      ? 'bg-[#E5E5EA]/80 text-[#1D1D1F] font-semibold'
                       : 'text-[#6E6E73] hover:text-[#1D1D1F] hover:bg-[#F2F2F7]'
                   }`}
                 >
@@ -71,13 +97,13 @@ export default function App() {
           {/* Right Action: Report Hazard + Discreet Staff Link */}
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setCurrentView('authority')}
+              onClick={() => handleNavigate('authority')}
               className="text-xs text-[#6E6E73] hover:text-[#1D1D1F] font-medium transition-colors cursor-pointer px-2 py-1"
             >
               Staff Portal →
             </button>
             <button
-              onClick={() => setCurrentView('report')}
+              onClick={() => handleNavigate('report')}
               className="btn-apple-primary text-xs py-1.5 px-4"
             >
               <PlusCircle className="w-3.5 h-3.5" />
@@ -90,7 +116,7 @@ export default function App() {
       {/* ── Mobile Top Header (<1024px) ───────────────────────────────── */}
       {!isAuthorityView && (
         <header className="lg:hidden bg-white/80 backdrop-blur-md border-b border-[#E5E5EA] px-4 py-2.5 flex items-center justify-between z-30 flex-shrink-0 sticky top-0">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => setCurrentView('home')}>
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNavigate('home')}>
             <div className="w-6 h-6 rounded-md bg-[#0071E3] flex items-center justify-center text-white font-bold text-xs">
               R
             </div>
@@ -99,7 +125,7 @@ export default function App() {
           </div>
 
           <button
-            onClick={() => setCurrentView('authority')}
+            onClick={() => handleNavigate('authority')}
             className="text-[11px] font-medium text-[#6E6E73] hover:text-[#1D1D1F] px-2 py-1 rounded-md hover:bg-[#F2F2F7] cursor-pointer"
           >
             Staff
@@ -110,25 +136,25 @@ export default function App() {
       {/* ── Main Dynamic Route Viewport ───────────────────────────────── */}
       <main className="flex-1 overflow-hidden relative">
         <Suspense fallback={<AppleLoadingFallback />}>
-          {currentView === 'home' && <CitizenHome onNavigate={setCurrentView} />}
-          {currentView === 'map' && <MapPage onNavigateReport={() => setCurrentView('report')} />}
+          {currentView === 'home' && <CitizenHome onNavigate={handleNavigate} />}
+          {currentView === 'map' && <MapPage onNavigateReport={() => handleNavigate('report')} />}
           {currentView === 'report' && (
-            <ReportPage onBack={() => setCurrentView('map')} onComplete={setCurrentView} />
+            <ReportPage onBack={() => handleNavigate('map')} onComplete={handleNavigate} />
           )}
           {currentView === 'track' && (
-            <TrackReportsPage onBack={() => setCurrentView('map')} onNavigateReport={() => setCurrentView('report')} />
+            <TrackReportsPage onBack={() => handleNavigate('map')} onNavigateReport={() => handleNavigate('report')} />
           )}
           {currentView === 'alerts' && (
-            <AlertsPage onSelectIncident={(id) => setCurrentView('map')} />
+            <AlertsPage onSelectIncident={(id) => handleNavigate('map')} />
           )}
           {currentView === 'profile' && (
             <ProfilePage
-              onNavigateAuthority={() => setCurrentView('authority')}
-              onNavigateReports={() => setCurrentView('track')}
+              onNavigateAuthority={() => handleNavigate('authority')}
+              onNavigateReports={() => handleNavigate('track')}
             />
           )}
           {currentView === 'authority' && (
-            <AuthorityWorkspace onBackToCitizen={() => setCurrentView('home')} />
+            <AuthorityWorkspace onBackToCitizen={() => handleNavigate('home')} />
           )}
         </Suspense>
       </main>
@@ -149,7 +175,7 @@ export default function App() {
               return (
                 <button
                   key={id}
-                  onClick={() => setCurrentView('report')}
+                  onClick={() => handleNavigate('report')}
                   aria-label="Report Road Hazard"
                   className="flex flex-col items-center justify-center cursor-pointer group focus:outline-none -mt-3"
                 >
@@ -164,7 +190,7 @@ export default function App() {
             return (
               <button
                 key={id}
-                onClick={() => setCurrentView(id)}
+                onClick={() => handleNavigate(id)}
                 aria-label={label}
                 className={`flex flex-col items-center justify-center py-1 px-2 min-h-[44px] text-[10px] font-medium transition-colors cursor-pointer ${
                   isActive ? 'text-[#0071E3] font-semibold' : 'text-[#86868B] hover:text-[#1D1D1F]'

@@ -49,7 +49,7 @@ export default function CitizenHome({ onNavigate }) {
 
           <div className="pl-3 sm:pl-4">
             <span className="text-2xl sm:text-3xl font-semibold tracking-tight text-[#34C759] block">
-              {stats.resolvedCount}
+              {stats.verifiedResolved}
             </span>
             <span className="text-xs text-[#86868B] font-medium mt-0.5 block">
               Resolved
