@@ -23,5 +23,16 @@ export default defineConfig({
         secure: false,
       }
     }
+  },
+  build: {
+    target: 'esnext',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'leaflet-vendor': ['leaflet', 'react-leaflet'],
+          'lucide-icons': ['lucide-react'],
+        }
+      }
+    }
   }
 })

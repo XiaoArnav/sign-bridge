@@ -274,6 +274,9 @@ class LiveIngestionPipeline {
     this.isRunning = false
     this.pollInterval = null
     this.listeners = new Set()
+    this.isPollingNews = false
+    this.isPollingSachet = false
+    this.notifyTimeout = null
   }
 
   addLog(message) {
@@ -290,11 +293,16 @@ class LiveIngestionPipeline {
   }
 
   notifyListeners() {
-    this.listeners.forEach(cb => cb(this.logs, SOURCE_REGISTRY))
+    if (this.notifyTimeout) clearTimeout(this.notifyTimeout)
+    this.notifyTimeout = setTimeout(() => {
+      this.listeners.forEach(cb => cb(this.logs, SOURCE_REGISTRY))
+    }, 100)
   }
 
-  // 1. Fetch & Parse News RSS
+  // 1. Fetch & Parse News RSS with in-flight lock
   async pollNewsFeed() {
+    if (this.isPollingNews) return null
+    this.isPollingNews = true
     const startTime = Date.now()
     const stats = { received: 0, created: 0, updated: 0, deduplicated: 0, rejected: 0 }
     const src = SOURCE_REGISTRY.find(s => s.id === 'src-news')
@@ -325,7 +333,6 @@ class LiveIngestionPipeline {
         const classification = classifyHazard(cleanTitle, cleanDesc)
         if (!classification.isHazard) {
           stats.rejected++
-          // Record as rejected source item for audit trail
           hazardStore.recordSourceItem({
             source_id: 'src-news',
             external_id: rawGuid.slice(0, 40),
@@ -341,7 +348,7 @@ class LiveIngestionPipeline {
           return
         }
 
-        // Deduplication check: Has this external GUID/URL been ingested before?
+        // Deduplication check
         const existingSources = hazardStore.getSourceItems()
         const alreadyIngested = existingSources.some(s => s.external_id === rawGuid || (s.original_url && s.original_url === rawLink))
         if (alreadyIngested) {
@@ -349,7 +356,6 @@ class LiveIngestionPipeline {
           return
         }
 
-        // Deduplication check: Does an active incident match nearby or with identical headline?
         const activeIncidents = hazardStore.getAll('all', 'all')
         const matchingIncident = activeIncidents.find(inc => {
           if (inc.category !== classification.category) return false
@@ -360,7 +366,6 @@ class LiveIngestionPipeline {
         })
 
         if (matchingIncident) {
-          // Corroborate existing incident instead of creating a duplicate pin
           hazardStore.corroborateIncident(matchingIncident.id, {
             sourceName: publisher,
             title: cleanTitle,
@@ -380,14 +385,13 @@ class LiveIngestionPipeline {
           stats.updated++
           this.addLog(`Corroborated incident [${matchingIncident.id}] with ${publisher} dispatch`)
         } else {
-          // Geocode and create new canonical live incident
           const geo = resolveLocationFromText(`${cleanTitle} ${cleanDesc}`, index)
           const newIncident = hazardStore.createLiveIncident({
             category: classification.category,
             severity: classification.severity,
             title: cleanTitle,
             description: cleanDesc,
-            latitude: geo.lat + (Math.random() - 0.5) * 0.003, // Tiny deterministic jitter to prevent pin overlap
+            latitude: geo.lat + (Math.random() - 0.5) * 0.003,
             longitude: geo.lng + (Math.random() - 0.5) * 0.003,
             address: geo.address,
             city: geo.city,
@@ -423,17 +427,21 @@ class LiveIngestionPipeline {
         src.itemsCreated += stats.created
       }
 
-      this.addLog(`News feed sync complete. Ingested ${stats.received} raw items: ${stats.created} created, ${stats.updated} corroborated, ${stats.deduplicated} duplicates, ${stats.rejected} filtered.`)
+      this.addLog(`News feed sync complete: ${stats.received} items processed.`)
     } catch (err) {
       this.addLog(`News connector note: ${err.message || 'Error polling news feed'}`)
       if (src) src.status = 'Degraded'
+    } finally {
+      this.isPollingNews = false
     }
 
     return stats
   }
 
-  // 2. Fetch & Parse NDMA SACHET
+  // 2. Fetch & Parse NDMA SACHET with in-flight lock
   async pollSachetFeed() {
+    if (this.isPollingSachet) return null
+    this.isPollingSachet = true
     const stats = { received: 0, created: 0, updated: 0, deduplicated: 0, rejected: 0 }
     const src = SOURCE_REGISTRY.find(s => s.id === 'src-sachet')
 
@@ -449,7 +457,7 @@ class LiveIngestionPipeline {
       stats.received = items.length
 
       items.forEach((item, index) => {
-        if (index > 4) return // Process top 5 most urgent alerts
+        if (index > 4) return // Top 5 alerts
         const rawTitle = item.querySelector('title')?.textContent || ''
         const rawLink = item.querySelector('link')?.textContent || ''
         const rawGuid = item.querySelector('guid')?.textContent || rawLink
@@ -462,11 +470,9 @@ class LiveIngestionPipeline {
         const cleanDesc = sanitizeHtml(rawDesc) || `${cleanTitle}. Official alert issued by ${author}.`
 
         const classification = classifyHazard(cleanTitle, cleanDesc)
-        // CAP disaster alerts are critical public safety notices
         const category = classification.category || 'flooding'
         const severity = classification.severity || 'critical'
 
-        // Check deduplication
         const existingSources = hazardStore.getSourceItems()
         const alreadyIngested = existingSources.some(s => s.external_id === rawGuid)
         if (alreadyIngested) {
@@ -520,6 +526,8 @@ class LiveIngestionPipeline {
     } catch (err) {
       this.addLog(`NDMA SACHET connector error: ${err.message || 'Offline'}`)
       if (src) src.status = 'Degraded'
+    } finally {
+      this.isPollingSachet = false
     }
 
     return stats
@@ -570,13 +578,33 @@ class LiveIngestionPipeline {
 
     // Recurring cycle
     this.pollInterval = setInterval(() => {
+      // Pause polling when tab is not visible to prevent battery & CPU drain
+      if (typeof document !== 'undefined' && document.hidden) return
       this.pollNewsFeed()
       this.pollSachetFeed()
-    }, 45000)
+    }, 60000)
+
+    // Listen for tab visibility changes
+    if (typeof document !== 'undefined') {
+      this.visibilityHandler = () => {
+        if (!document.hidden && this.isRunning) {
+          const src = SOURCE_REGISTRY.find(s => s.id === 'src-news')
+          const timeSinceLast = src?.lastSync ? (Date.now() - new Date(src.lastSync).getTime()) : 999999
+          if (timeSinceLast > 60000) {
+            this.pollNewsFeed()
+            this.pollSachetFeed()
+          }
+        }
+      }
+      document.addEventListener('visibilitychange', this.visibilityHandler)
+    }
   }
 
   stop() {
     if (this.pollInterval) clearInterval(this.pollInterval)
+    if (typeof document !== 'undefined' && this.visibilityHandler) {
+      document.removeEventListener('visibilitychange', this.visibilityHandler)
+    }
     this.isRunning = false
     this.addLog(`Ingestion worker paused.`)
   }

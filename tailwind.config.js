@@ -4,34 +4,62 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Apple Minimalist Neutral System (Default Light)
+        apple: {
+          bg: '#F5F5F7',
+          card: '#FFFFFF',
+          subtle: '#F2F2F7',
+          border: '#E5E5EA',
+          borderStrong: '#D2D2D7',
+          text: '#1D1D1F',
+          secondary: '#6E6E73',
+          muted: '#86868B',
+          blue: '#0071E3',
+          blueHover: '#0077ED',
+          green: '#34C759',
+          amber: '#FF9500',
+          red: '#FF3B30',
+        },
+        // Backward compatibility tokens for Authority Workspace
         midnight: '#0B1220',
         surface: '#111827',
         'surface-elevated': '#151F30',
         'surface-border': '#334155',
         teal: {
-          DEFAULT: '#43D9C2',
-          hover: '#38C5B0',
-          muted: 'rgba(67, 217, 194, 0.15)',
+          DEFAULT: '#0071E3', // Apple Blue primary
+          hover: '#0077ED',
+          muted: 'rgba(0, 113, 227, 0.1)',
         },
         rastaText: {
-          primary: '#F8FAFC',
-          secondary: '#CBD5E1',
-          muted: '#94A3B8',
+          primary: '#1D1D1F',
+          secondary: '#6E6E73',
+          muted: '#86868B',
         },
         severity: {
-          critical: '#F87171',
-          high: '#FBBF24',
-          medium: '#60A5FA',
-          low: '#94A3B8',
-          verified: '#34D399',
+          critical: '#FF3B30',
+          high: '#FF9500',
+          medium: '#0071E3',
+          low: '#86868B',
+          verified: '#34C759',
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: [
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"SF Pro Display"',
+          '"SF Pro Text"',
+          '"Helvetica Neue"',
+          'Helvetica',
+          'Arial',
+          'sans-serif'
+        ],
       },
       boxShadow: {
-        'cyber-lift': '0 4px 20px -2px rgba(67, 217, 194, 0.15)',
-        'card-lift': '0 6px 20px -4px rgba(0, 0, 0, 0.5)',
+        'apple-sm': '0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02)',
+        'apple': '0 2px 10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02)',
+        'apple-md': '0 6px 20px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03)',
+        'apple-lg': '0 12px 32px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04)',
       }
     },
   },
