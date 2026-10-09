@@ -94,7 +94,7 @@ export default function App() {
       <div className="flex-1 flex flex-col h-full overflow-hidden relative">
         {/* Mobile Top Header (<1024px) */}
         {!isAuthorityView && (
-          <header className="lg:hidden bg-surface border-b border-surface-border px-4 py-3 flex items-center justify-between z-30 flex-shrink-0">
+          <header className="lg:hidden bg-[#0B1220] border-b border-[#334155] px-4 py-3 flex items-center justify-between z-30 flex-shrink-0">
             <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => setCurrentView('home')}>
               <div className="w-8 h-8 rounded-xl bg-rose-600 flex items-center justify-center text-white font-black text-sm">
                 R
@@ -143,7 +143,7 @@ export default function App() {
 
         {/* ── Mobile Fixed Bottom Navigation (<1024px) (Blueprint Section 3) ── */}
         {!isAuthorityView && (
-          <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-surface/95 backdrop-blur-xl border-t border-surface-border flex items-center justify-around py-1.5 px-2 z-40 safe-bottom-nav">
+          <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-[#0B1220] border-t border-[#334155] flex items-center justify-around py-1.5 px-2 z-40 safe-bottom-nav shadow-2xl">
             {[
               { id: 'map',     label: 'Map',     Icon: Map },
               { id: 'track',   label: 'Reports', Icon: FileText },

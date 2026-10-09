@@ -5,22 +5,22 @@ export default {
     extend: {
       colors: {
         midnight: '#0B1220',
-        surface: '#151F30',
-        'surface-elevated': '#1A273D',
-        'surface-border': '#24344E',
+        surface: '#111827',
+        'surface-elevated': '#151F30',
+        'surface-border': '#334155',
         teal: {
           DEFAULT: '#43D9C2',
           hover: '#38C5B0',
-          muted: 'rgba(67, 217, 194, 0.12)',
+          muted: 'rgba(67, 217, 194, 0.15)',
         },
         rastaText: {
-          primary: '#E8EEF7',
-          secondary: '#94A3B8',
-          muted: '#64748B',
+          primary: '#F8FAFC',
+          secondary: '#CBD5E1',
+          muted: '#94A3B8',
         },
         severity: {
-          critical: '#EF4444',
-          high: '#F59E0B',
+          critical: '#F87171',
+          high: '#FBBF24',
           medium: '#60A5FA',
           low: '#94A3B8',
           verified: '#34D399',
