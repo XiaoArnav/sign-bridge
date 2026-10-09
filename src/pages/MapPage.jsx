@@ -41,7 +41,7 @@ function getLeafletPin(color, isResolved) {
               width: 30px; height: 30px; border-radius: 50% 50% 50% 0;
               background: ${color}; border: 2.5px solid #FFFFFF;
               transform: rotate(-45deg);
-              box-shadow: 0 3px 10px rgba(0,0,0,0.22);
+              box-shadow: 0 2px 6px rgba(0,0,0,0.12);
             "></div>
             ${
               isResolved
@@ -64,7 +64,7 @@ const userLocationIcon = L.divIcon({
     <div style="position:relative; width:28px; height:28px; display:flex; align-items:center; justify-content:center;">
       <div class="user-location-pulse" style="position:absolute; inset:-8px; border-radius:50%; background:rgba(0, 113, 227, 0.25); pointer-events:none;"></div>
       <div style="position:absolute; inset:-2px; border-radius:50%; background:rgba(0, 113, 227, 0.2);"></div>
-      <div style="width:16px; height:16px; border-radius:50%; background:#0071E3; border:3px solid #FFFFFF; box-shadow:0 2px 8px rgba(0,0,0,0.25); position:relative; z-index:2;"></div>
+      <div style="width:16px; height:16px; border-radius:50%; background:#0071E3; border:3px solid #FFFFFF; box-shadow:0 1px 4px rgba(0,0,0,0.12); position:relative; z-index:2;"></div>
     </div>
   `,
   iconSize: [28, 28],

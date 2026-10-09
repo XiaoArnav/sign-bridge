@@ -78,7 +78,7 @@
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid #E5E5EA;
   color: #1D1D1F;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .map-overlay-subcard {
@@ -232,7 +232,7 @@
   color: #1D1D1F !important;
   border: 1px solid #E5E5EA !important;
   border-radius: 1rem !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
   padding: 0 !important;
 }
 

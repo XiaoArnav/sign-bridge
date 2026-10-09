@@ -14,7 +14,7 @@ const adjustablePinIcon = L.divIcon({
         width: 32px; height: 32px; border-radius: 50% 50% 50% 0;
         background: #0071E3; border: 3px solid #FFFFFF;
         transform: rotate(-45deg);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
       "></div>
       <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:bold;">📍</div>
     </div>`,

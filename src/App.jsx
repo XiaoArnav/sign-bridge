@@ -33,7 +33,7 @@ export default function App() {
         <header className="hidden lg:flex items-center justify-between px-8 h-14 bg-white/80 backdrop-blur-md border-b border-[#E5E5EA] sticky top-0 z-40 flex-shrink-0 transition-all">
           {/* Brand Logo & Wordmark */}
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentView('home')}>
-            <div className="w-7 h-7 rounded-lg bg-[#0071E3] flex items-center justify-center text-white font-bold text-sm shadow-sm">
+            <div className="w-7 h-7 rounded-lg bg-[#0071E3] flex items-center justify-center text-white font-bold text-sm">
               R
             </div>
             <div className="flex items-center gap-2">
@@ -78,7 +78,7 @@ export default function App() {
             </button>
             <button
               onClick={() => setCurrentView('report')}
-              className="btn-apple-primary text-xs py-1.5 px-4 shadow-sm"
+              className="btn-apple-primary text-xs py-1.5 px-4"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               <span>Report Hazard</span>
@@ -91,7 +91,7 @@ export default function App() {
       {!isAuthorityView && (
         <header className="lg:hidden bg-white/80 backdrop-blur-md border-b border-[#E5E5EA] px-4 py-2.5 flex items-center justify-between z-30 flex-shrink-0 sticky top-0">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => setCurrentView('home')}>
-            <div className="w-6 h-6 rounded-md bg-[#0071E3] flex items-center justify-center text-white font-bold text-xs shadow-sm">
+            <div className="w-6 h-6 rounded-md bg-[#0071E3] flex items-center justify-center text-white font-bold text-xs">
               R
             </div>
             <span className="font-semibold text-[#1D1D1F] text-base tracking-tight leading-none">RASTA</span>
@@ -135,7 +135,7 @@ export default function App() {
 
       {/* ── Mobile iOS Tab Bar (<1024px) ─────────────────────────────── */}
       {!isAuthorityView && (
-        <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white/90 backdrop-blur-md border-t border-[#E5E5EA] flex items-center justify-around py-1 px-2 z-40 safe-bottom-nav shadow-apple-sm">
+        <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white/90 backdrop-blur-md border-t border-[#E5E5EA] flex items-center justify-around py-1 px-2 z-40 safe-bottom-nav">
           {[
             { id: 'map',     label: 'Map',     Icon: Map },
             { id: 'track',   label: 'Reports', Icon: FileText },
@@ -153,7 +153,7 @@ export default function App() {
                   aria-label="Report Road Hazard"
                   className="flex flex-col items-center justify-center cursor-pointer group focus:outline-none -mt-3"
                 >
-                  <div className="w-11 h-11 rounded-full bg-[#0071E3] text-white flex items-center justify-center shadow-md active:scale-95 transition-transform border-2 border-white">
+                  <div className="w-11 h-11 rounded-full bg-[#0071E3] hover:bg-[#0077ED] text-white flex items-center justify-center active:scale-95 transition-transform border-2 border-white">
                     <PlusCircle className="w-5 h-5" />
                   </div>
                   <span className="text-[10px] font-semibold text-[#0071E3] mt-0.5">Report</span>
