@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { MapContainer, TileLayer, Marker, Polyline, useMap } from 'react-leaflet'
+import React, { useState, useEffect, useRef } from 'react'
+import { MapContainer, TileLayer, Marker, Polyline, Circle, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import { hazardStore, CITIES } from '../lib/hazardStore.js'
 import { getCategory, getSeverity, getStatus } from '../lib/hazardTypes.js'
@@ -19,7 +19,10 @@ import {
   ChevronUp,
   AlertOctagon,
   CheckCircle2,
-  Info
+  Info,
+  Loader2,
+  Compass,
+  Radio
 } from 'lucide-react'
 
 // Custom Leaflet Pins with dark outer borders to pop on both light tiles and dark overlays
@@ -44,6 +47,20 @@ function createLeafletPin(color, isResolved) {
     iconAnchor: [16, 32],
   })
 }
+
+// Distinctive User Location Marker: Pulsing teal radar halo + solid white/teal core
+const userLocationIcon = L.divIcon({
+  className: 'user-location-marker-container',
+  html: `
+    <div style="position:relative; width:28px; height:28px; display:flex; align-items:center; justify-content:center;">
+      <div class="user-location-pulse" style="position:absolute; inset:-8px; border-radius:50%; background:rgba(67, 217, 194, 0.4); pointer-events:none;"></div>
+      <div style="position:absolute; inset:-3px; border-radius:50%; background:rgba(67, 217, 194, 0.35);"></div>
+      <div style="width:16px; height:16px; border-radius:50%; background:#43D9C2; border:3px solid #FFFFFF; box-shadow:0 2px 10px rgba(0,0,0,0.9); position:relative; z-index:2;"></div>
+    </div>
+  `,
+  iconSize: [28, 28],
+  iconAnchor: [14, 14],
+})
 
 const PIN_COLORS = {
   critical: '#F87171',
@@ -105,12 +122,166 @@ export default function MapPage({ onNavigateReport }) {
   const [activeRouteType, setActiveRouteType] = useState('safe') // 'hazardous' | 'safe'
   const [isRouteCollapsed, setIsRouteCollapsed] = useState(false)
 
+  // Live Browser Geolocation & Tracking State
+  const [userLocation, setUserLocation] = useState(null) // { lat, lng, accuracy, heading, speed, timestamp }
+  const [isLocating, setIsLocating] = useState(false)
+  const [isTracking, setIsTracking] = useState(false)
+  const [geoStatusMessage, setGeoStatusMessage] = useState(null) // { type: 'loading'|'success'|'error'|'warning'|'info', text: string }
+
+  const watchIdRef = useRef(null)
+  const messageTimeoutRef = useRef(null)
+
   const reloadData = () => {
     setIncidents(hazardStore.getAll('all'))
   }
 
   useEffect(() => {
     reloadData()
+  }, [])
+
+  const showStatus = (type, text, duration = 4000) => {
+    if (messageTimeoutRef.current) clearTimeout(messageTimeoutRef.current)
+    setGeoStatusMessage({ type, text })
+    if (duration > 0) {
+      messageTimeoutRef.current = setTimeout(() => {
+        setGeoStatusMessage(null)
+      }, duration)
+    }
+  }
+
+  // ── Browser Geolocation: One-Time Precision Fix ────────────────────────────
+  const locateUser = (centerMap = true) => {
+    if (!navigator.geolocation) {
+      showStatus('error', 'Browser does not support geolocation.', 6000)
+      return
+    }
+
+    if (!window.isSecureContext && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      showStatus('warning', 'Geolocation requires HTTPS security. Please use a secure connection.', 6000)
+      return
+    }
+
+    setIsLocating(true)
+    showStatus('loading', 'Finding your location… Acquiring GPS lock', 0)
+
+    const geoOptions = {
+      enableHighAccuracy: true,
+      timeout: 12000,
+      maximumAge: 15000,
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setIsLocating(false)
+        const { latitude, longitude, accuracy, heading, speed } = position.coords
+        const newLocation = {
+          lat: latitude,
+          lng: longitude,
+          accuracy: accuracy || 0,
+          heading: heading || 0,
+          speed: speed || 0,
+          timestamp: position.timestamp || Date.now(),
+        }
+
+        setUserLocation(newLocation)
+
+        if (centerMap) {
+          setMapCenter([latitude, longitude])
+          setMapZoom(prev => Math.max(prev, 15))
+        }
+
+        const accText = accuracy ? ` (±${Math.round(accuracy)}m accuracy)` : ''
+        showStatus('success', `Your location is shown on the map${accText}.`, 4000)
+      },
+      (error) => {
+        setIsLocating(false)
+        let msg = 'Couldn’t determine your location. Try again or continue using the map.'
+
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            msg = 'Location access is blocked. Enable it in your browser settings and try again.'
+            break
+          case error.POSITION_UNAVAILABLE:
+            msg = 'Location information is currently unavailable. Try again outside or check device GPS.'
+            break
+          case error.TIMEOUT:
+            msg = 'Location request timed out. Retrying or continue using the map.'
+            break
+          default:
+            msg = 'Couldn’t determine your location. Try again or continue using the map.'
+        }
+
+        showStatus('error', msg, 6000)
+      },
+      geoOptions
+    )
+  }
+
+  // ── Optional Continuous Live Tracking Mode ─────────────────────────────────
+  const toggleTracking = () => {
+    if (isTracking) {
+      stopTracking()
+      showStatus('info', 'Live location tracking stopped.', 3000)
+      return
+    }
+
+    if (!navigator.geolocation) {
+      showStatus('error', 'Browser does not support geolocation.', 5000)
+      return
+    }
+
+    setIsTracking(true)
+    showStatus('loading', 'Starting continuous live tracking…', 3000)
+
+    // Immediate initial fix and center
+    locateUser(true)
+
+    const geoOptions = {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 5000,
+    }
+
+    if (watchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(watchIdRef.current)
+    }
+
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      (position) => {
+        const { latitude, longitude, accuracy, heading, speed } = position.coords
+        setUserLocation({
+          lat: latitude,
+          lng: longitude,
+          accuracy: accuracy || 0,
+          heading: heading || 0,
+          speed: speed || 0,
+          timestamp: position.timestamp || Date.now(),
+        })
+      },
+      (error) => {
+        console.warn('Geolocation watchPosition error:', error.message)
+      },
+      geoOptions
+    )
+  }
+
+  const stopTracking = () => {
+    if (watchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(watchIdRef.current)
+      watchIdRef.current = null
+    }
+    setIsTracking(false)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current)
+      }
+      if (messageTimeoutRef.current) {
+        clearTimeout(messageTimeoutRef.current)
+      }
+    }
   }, [])
 
   const handleCitySelect = (city) => {
@@ -125,19 +296,6 @@ export default function MapPage({ onNavigateReport }) {
     if (selectedIncident && selectedIncident.id === id) {
       setSelectedIncident(prev => ({ ...prev, votes: (prev.votes || 0) + 1 }))
     }
-  }
-
-  const handleNearMe = () => {
-    navigator.geolocation?.getCurrentPosition(
-      pos => {
-        setMapCenter([pos.coords.latitude, pos.coords.longitude])
-        setMapZoom(14)
-      },
-      () => {
-        setMapCenter(CITIES[0].center)
-        setMapZoom(CITIES[0].zoom)
-      }
-    )
   }
 
   // Filter incidents by city and criteria
@@ -325,6 +483,56 @@ export default function MapPage({ onNavigateReport }) {
             />
           )}
 
+          {/* Real Live User Location Marker with Radar Halo & GPS Accuracy Ring */}
+          {userLocation && (
+            <>
+              {/* Optional GPS Accuracy Radius Circle */}
+              {userLocation.accuracy > 0 && userLocation.accuracy <= 5000 && (
+                <Circle
+                  center={[userLocation.lat, userLocation.lng]}
+                  radius={userLocation.accuracy}
+                  pathOptions={{
+                    color: '#43D9C2',
+                    fillColor: '#43D9C2',
+                    fillOpacity: 0.12,
+                    weight: 1.5,
+                    dashArray: '4, 4',
+                  }}
+                />
+              )}
+
+              {/* Distinctive User Dot Marker */}
+              <Marker
+                position={[userLocation.lat, userLocation.lng]}
+                icon={userLocationIcon}
+                zIndexOffset={1000}
+              >
+                <Popup>
+                  <div className="p-1.5 space-y-1.5 text-xs">
+                    <div className="flex items-center gap-1.5 font-bold text-[#43D9C2]">
+                      <span className="w-2.5 h-2.5 rounded-full bg-[#43D9C2] animate-pulse"></span>
+                      <span>Your Live Position</span>
+                    </div>
+                    <div className="text-[11px] text-[#CBD5E1] font-mono bg-[#151F30] p-1.5 rounded border border-[#334155]">
+                      {userLocation.lat.toFixed(5)}, {userLocation.lng.toFixed(5)}
+                    </div>
+                    {userLocation.accuracy > 0 && (
+                      <div className="text-[10px] text-[#94A3B8]">
+                        Accuracy: ±{Math.round(userLocation.accuracy)} meters
+                      </div>
+                    )}
+                    <div className="text-[10px] text-[#94A3B8] pt-1 border-t border-[#334155]/60 flex items-center justify-between">
+                      <span>Status: GPS Locked</span>
+                      <span className="text-[#34D399] font-bold font-mono">
+                        {new Date(userLocation.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                  </div>
+                </Popup>
+              </Marker>
+            </>
+          )}
+
           {/* Incident Pins */}
           {filtered.map(item => {
             const isResolved = item.status === 'verified_resolved'
@@ -397,7 +605,7 @@ export default function MapPage({ onNavigateReport }) {
             {/* Collapsible Content Area */}
             {!isRouteCollapsed && (
               <>
-                {/* Two Clearly Separated Metric Cards (Stacked on narrow mobile, 2 cols on wider) */}
+                {/* Two Clearly Separated Metric Cards */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {/* Card 1: Direct Path */}
                   <button
@@ -489,16 +697,91 @@ export default function MapPage({ onNavigateReport }) {
           </div>
         )}
 
-        {/* Map Recenter Button */}
-        <div className="absolute bottom-20 lg:bottom-4 right-4 z-15">
-          <button
-            onClick={handleNearMe}
-            className="p-3 rounded-2xl bg-[#0B1220] border border-[#334155] text-[#43D9C2] hover:text-[#F8FAFC] shadow-2xl cursor-pointer hover:-translate-y-0.5 transition-transform focus:outline-none focus:ring-2 focus:ring-[#43D9C2]"
-            aria-label="Recenter map near my location"
-            title="Recenter near my location"
-          >
-            <Navigation className="w-5 h-5" />
-          </button>
+        {/* ── Floating Location Control Stack (Section 1 & 2 Implementation) ── */}
+        <div
+          className={`absolute bottom-24 lg:bottom-6 z-40 flex flex-col items-end gap-2.5 transition-all duration-300 ${
+            selectedIncident ? 'right-4 lg:right-[26rem]' : 'right-4 lg:right-6'
+          }`}
+        >
+          {/* Status Message / Error Toast */}
+          {geoStatusMessage && (
+            <div
+              role="status"
+              className="map-overlay-panel px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 max-w-xs shadow-2xl animate-fade-in border border-[#334155]"
+            >
+              {geoStatusMessage.type === 'loading' && (
+                <Loader2 className="w-4 h-4 text-[#43D9C2] animate-spin flex-shrink-0" />
+              )}
+              {geoStatusMessage.type === 'success' && (
+                <CheckCircle2 className="w-4 h-4 text-[#34D399] flex-shrink-0" />
+              )}
+              {geoStatusMessage.type === 'error' && (
+                <AlertTriangle className="w-4 h-4 text-[#F87171] flex-shrink-0" />
+              )}
+              {geoStatusMessage.type === 'warning' && (
+                <AlertOctagon className="w-4 h-4 text-[#FBBF24] flex-shrink-0" />
+              )}
+              {geoStatusMessage.type === 'info' && (
+                <Info className="w-4 h-4 text-[#43D9C2] flex-shrink-0" />
+              )}
+              <span className="text-[#F8FAFC] font-medium leading-tight text-[11px] flex-1">
+                {geoStatusMessage.text}
+              </span>
+              <button
+                onClick={() => setGeoStatusMessage(null)}
+                className="text-[#94A3B8] hover:text-[#F8FAFC] p-0.5 ml-1 cursor-pointer"
+                aria-label="Dismiss message"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+
+          {/* Control Buttons Cluster */}
+          <div className="flex items-center gap-2">
+            {/* Optional Continuous Live Tracking Mode Pill */}
+            <button
+              onClick={toggleTracking}
+              disabled={isLocating}
+              aria-pressed={isTracking}
+              aria-label={isTracking ? 'Disable continuous live GPS tracking' : 'Enable continuous live GPS tracking'}
+              title={isTracking ? 'Live Tracking: ON (Click to Stop)' : 'Continuous Tracking: OFF (Click to Enable)'}
+              className={`h-11 px-3.5 rounded-full text-xs font-bold border transition-all cursor-pointer flex items-center gap-2 shadow-2xl focus:outline-none focus:ring-2 focus:ring-[#43D9C2] ${
+                isTracking
+                  ? 'bg-[#0E201E] text-[#43D9C2] border-[#43D9C2] ring-1 ring-[#43D9C2]/50'
+                  : 'bg-[#0B1220] text-[#CBD5E1] border-[#334155] hover:border-[#43D9C2] hover:text-[#F8FAFC]'
+              }`}
+            >
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  isTracking ? 'bg-[#43D9C2] animate-ping' : 'bg-[#94A3B8]'
+                }`}
+              />
+              <span className="text-[11px]">{isTracking ? 'Tracking Live' : 'Track Mode'}</span>
+            </button>
+
+            {/* Primary Circular "Show My Location" Button (Min 44x44px Touch Target) */}
+            <button
+              onClick={() => locateUser(true)}
+              disabled={isLocating}
+              aria-label={isLocating ? 'Acquiring live location…' : 'Show my location'}
+              title="Show my location"
+              className="w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-[#0B1220] hover:bg-[#151F30] active:scale-95 border-2 border-[#334155] hover:border-[#43D9C2] text-[#43D9C2] hover:text-[#F8FAFC] shadow-2xl flex items-center justify-center transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#43D9C2] focus:ring-offset-2 focus:ring-offset-[#0B1220] disabled:opacity-60 disabled:cursor-not-allowed group relative"
+            >
+              {isLocating ? (
+                <Loader2 className="w-5 h-5 text-[#43D9C2] animate-spin" />
+              ) : isTracking ? (
+                <Compass className="w-5 h-5 text-[#43D9C2] animate-pulse" />
+              ) : (
+                <Navigation className="w-5 h-5 transition-transform group-hover:scale-110 fill-[#43D9C2]/20" />
+              )}
+
+              {/* Active GPS Indicator Dot */}
+              {userLocation && !isLocating && (
+                <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-[#34D399] border-2 border-[#0B1220]" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
 

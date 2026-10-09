@@ -219,15 +219,55 @@
 }
 
 .leaflet-popup-tip {
-  background: #151F30 !important;
-  border: 1px solid #24344E !important;
+  background: #0B1220 !important;
+  border: 1px solid #334155 !important;
 }
 
-/* Position Leaflet attribution neatly above bottom navigation on mobile */
+/* Leaflet attribution styling and positioning */
+.leaflet-control-attribution {
+  background: rgba(11, 18, 32, 0.85) !important;
+  color: #94A3B8 !important;
+  font-size: 9px !important;
+  border-radius: 6px !important;
+  padding: 2px 6px !important;
+  border: 1px solid #334155 !important;
+}
+.leaflet-control-attribution a {
+  color: #43D9C2 !important;
+}
+
+/* Position Leaflet attribution neatly on bottom-left away from location controls */
 @media (max-width: 1023px) {
   .leaflet-bottom.leaflet-right {
-    bottom: 5.5rem !important;
+    bottom: 5.25rem !important;
+    left: 0.75rem !important;
+    right: auto !important;
   }
+}
+
+/* ── User Live Location Marker Pulse Animation ────────────────────────────── */
+@keyframes rasta-radar-pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.user-location-pulse {
+  animation: rasta-radar-pulse 2s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+}
+
+.user-location-marker-container {
+  background: transparent !important;
+  border: none !important;
 }
 
 /* ── Clean Scrollbars ──────────────────────────────────────────────────────── */
