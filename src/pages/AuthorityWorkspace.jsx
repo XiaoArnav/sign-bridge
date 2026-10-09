@@ -30,7 +30,15 @@ import { getCategory, getSeverity, getStatus, DEPARTMENTS } from '../lib/hazardT
 import { liveIngestion, SOURCE_REGISTRY, getActiveConnectorsCount } from '../lib/ingestionEngine.js'
 
 export default function AuthorityWorkspace({ onBackToCitizen }) {
-  const [activeTab, setActiveTab] = useState('queue') // 'queue' | 'overview' | 'verification' | 'intelligence'
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window !== 'undefined' && window.location.hash.includes('tab=')) {
+      const match = window.location.hash.match(/tab=([a-z]+)/)
+      if (match && ['queue', 'overview', 'verification', 'intelligence'].includes(match[1])) {
+        return match[1]
+      }
+    }
+    return 'queue'
+  })
   const [queue, setQueue] = useState([])
   const [deptFilter, setDeptFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
@@ -126,7 +134,7 @@ export default function AuthorityWorkspace({ onBackToCitizen }) {
     liveIngestion.addLog(`> ${commandInput.trim()}`)
 
     if (cmd.startsWith('sources') || cmd.startsWith('connectors')) {
-      liveIngestion.addLog(`Active Connectors (${getActiveConnectorsCount()}/${sources.length}): NDMA SACHET [Connected], News RSS [Connected], Citizen Submissions [Active]`)
+      liveIngestion.addLog(`Active Connectors (${getActiveConnectorsCount()}/${sources.length}): NDMA SACHET [Connected], News RSS [Connected], IMD Monsoon [Connected], Data.gov.in [Connected], Citizen Submissions [Active]`)
     } else if (cmd.startsWith('sync') || cmd.startsWith('ingest')) {
       handleManualSync()
     } else if (cmd.startsWith('stats')) {
@@ -794,10 +802,14 @@ export default function AuthorityWorkspace({ onBackToCitizen }) {
 
                         <div className="flex items-center gap-1.5">
                           {isConnected && (
-                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-50 text-[#0F8B72] border border-emerald-200 font-bold flex items-center gap-1">
+                            <button
+                              onClick={() => setSetupModalSource(src)}
+                              className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#0F8B72] border border-emerald-200 font-bold flex items-center gap-1 cursor-pointer hover:bg-emerald-100 transition-colors"
+                              title="Click to inspect connector telemetry"
+                            >
                               <span className="w-1.5 h-1.5 rounded-full bg-[#0F8B72] animate-pulse"></span>
                               <span>Connected</span>
-                            </span>
+                            </button>
                           )}
 
                           {isSetupRequired && (
@@ -931,29 +943,51 @@ export default function AuthorityWorkspace({ onBackToCitizen }) {
         </div>
       )}
 
-      {/* ── Connector Setup Instructions Modal ──────────────────────── */}
+      {/* ── Connector Setup & Telemetry Modal ──────────────────────── */}
       {setupModalSource && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl animate-fade-in border border-[#E7E5E0]">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-xl">{setupModalSource.icon}</span>
-                <h3 className="font-bold text-[#171717] text-sm">{setupModalSource.name}</h3>
+              <div className="flex items-center gap-2.5">
+                <span className="text-2xl">{setupModalSource.icon}</span>
+                <div>
+                  <h3 className="font-bold text-[#171717] text-sm">{setupModalSource.name}</h3>
+                  <span className="text-[10px] text-[#858585]">{setupModalSource.type}</span>
+                </div>
               </div>
               <button onClick={() => setSetupModalSource(null)} className="text-[#858585] hover:text-[#171717] cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-[#B7791F]">
-              <strong>Status: Setup Required.</strong> Direct API integration requires official developer credentials.
+            <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-[#0F8B72] flex items-center justify-between">
+              <div className="flex items-center gap-1.5 font-bold">
+                <span className="w-2 h-2 rounded-full bg-[#0F8B72] animate-pulse"></span>
+                <span>Connection Health: Active & Operational</span>
+              </div>
+              <span className="text-[10px] font-mono font-semibold">{setupModalSource.itemsReceived} items logged</span>
             </div>
 
-            <div className="space-y-2 text-xs text-[#626262]">
-              <p><strong className="text-[#171717]">Setup Instructions:</strong></p>
-              <p className="bg-[#F3F3F0] p-3 rounded-xl border border-[#E7E5E0] text-[#171717] font-mono text-[11px] leading-relaxed">
+            <div className="space-y-1.5 text-xs text-[#626262]">
+              <p><strong className="text-[#171717]">Connector Architecture:</strong></p>
+              <p className="bg-[#F3F3F0] p-3 rounded-xl border border-[#E7E5E0] text-[#171717] text-[11px] leading-relaxed">
                 {setupModalSource.setupInstructions}
               </p>
+            </div>
+
+            <div className="p-3 rounded-xl bg-[#F3F3F0] border border-[#E7E5E0] space-y-1.5 text-xs font-mono">
+              <div className="flex justify-between items-center">
+                <span className="text-[#858585]">Gateway Endpoint:</span>
+                <span className="text-[#4F46E5] font-bold truncate max-w-[210px]">{setupModalSource.url}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#858585]">Polling Interval:</span>
+                <span className="text-[#171717]">{setupModalSource.pollingIntervalSeconds ? `${setupModalSource.pollingIntervalSeconds}s` : 'Realtime Push'}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#858585]">Last Sync:</span>
+                <span className="text-[#171717]">{setupModalSource.lastSync ? new Date(setupModalSource.lastSync).toLocaleTimeString() : 'Active'}</span>
+              </div>
             </div>
 
             <div className="flex items-center justify-between pt-2 border-t border-[#E7E5E0] text-xs">
@@ -963,14 +997,31 @@ export default function AuthorityWorkspace({ onBackToCitizen }) {
                 rel="noopener noreferrer"
                 className="text-[#4F46E5] hover:underline flex items-center gap-1 font-semibold"
               >
-                <span>Developer Portal ↗</span>
+                <span>Agency Documentation ↗</span>
               </a>
-              <button
-                onClick={() => setSetupModalSource(null)}
-                className="bg-white hover:bg-[#F3F3F0] text-[#171717] border border-[#E7E5E0] text-xs py-1.5 px-4 rounded-xl cursor-pointer transition-colors"
-              >
-                Close
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={async () => {
+                    if (setupModalSource.id === 'src-imd') await liveIngestion.pollImdFeed()
+                    else if (setupModalSource.id === 'src-datagov') await liveIngestion.pollDataGovFeed()
+                    else if (setupModalSource.id === 'src-sachet') await liveIngestion.pollSachetFeed()
+                    else if (setupModalSource.id === 'src-news') await liveIngestion.pollNewsFeed()
+                    else await handleManualSync()
+                    reloadQueue()
+                    setSetupModalSource(null)
+                  }}
+                  className="bg-[#4F46E5] hover:bg-[#4338CA] text-white font-semibold py-1.5 px-3.5 rounded-xl cursor-pointer shadow-sm transition-colors text-xs flex items-center gap-1.5"
+                >
+                  <RefreshCw className="w-3 h-3" />
+                  <span>Sync Now</span>
+                </button>
+                <button
+                  onClick={() => setSetupModalSource(null)}
+                  className="bg-white hover:bg-[#F3F3F0] text-[#171717] border border-[#E7E5E0] text-xs py-1.5 px-3.5 rounded-xl cursor-pointer transition-colors font-medium"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         </div>

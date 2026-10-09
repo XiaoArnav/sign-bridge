@@ -24,7 +24,7 @@ export default function App() {
   // Navigation states: 'home' | 'map' | 'report' | 'track' | 'alerts' | 'profile' | 'authority'
   const [currentView, setCurrentView] = useState(() => {
     if (typeof window !== 'undefined') {
-      const hash = window.location.hash.replace('#', '')
+      const hash = window.location.hash.replace('#', '').split('?')[0]
       if (['home', 'map', 'report', 'track', 'alerts', 'profile', 'authority'].includes(hash)) {
         return hash
       }
@@ -34,7 +34,7 @@ export default function App() {
 
   useEffect(() => {
     const handleHash = () => {
-      const hash = window.location.hash.replace('#', '')
+      const hash = window.location.hash.replace('#', '').split('?')[0]
       if (['home', 'map', 'report', 'track', 'alerts', 'profile', 'authority'].includes(hash)) {
         setCurrentView(hash)
       }
