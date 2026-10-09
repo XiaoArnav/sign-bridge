@@ -1,4 +1,4 @@
-import React, { useState, Suspense, lazy } from 'react'
+import React, { useState, useEffect, Suspense, lazy } from 'react'
 import { Home, PlusCircle, Map, FileText, Bell, User, Shield, Radio, ShieldCheck, ChevronRight } from 'lucide-react'
 import CitizenHome from './pages/CitizenHome.jsx'
 import './lib/ingestionEngine.js'
