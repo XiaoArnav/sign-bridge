@@ -10,10 +10,10 @@ export const HAZARD_CATEGORIES = [
 ]
 
 export const SEVERITY_LEVELS = [
-  { id: 'critical', label: 'Critical', desc: 'Imminent threat to life',  badgeClass: 'bg-[#FF3B30]/10 text-[#FF3B30] border border-[#FF3B30]/20 font-semibold px-2.5 py-0.5 rounded-full text-[11px]', dot: 'bg-[#FF3B30]' },
-  { id: 'high',     label: 'High',     desc: 'Severe accident / vehicle risk', badgeClass: 'bg-[#FF9500]/10 text-[#FF9500] border border-[#FF9500]/20 font-semibold px-2.5 py-0.5 rounded-full text-[11px]', dot: 'bg-[#FF9500]' },
-  { id: 'medium',   label: 'Medium',   desc: 'Pedestrian obstacle',       badgeClass: 'bg-[#0071E3]/10 text-[#0071E3] border border-[#0071E3]/20 font-semibold px-2.5 py-0.5 rounded-full text-[11px]', dot: 'bg-[#0071E3]' },
-  { id: 'low',      label: 'Low',      desc: 'Minor defect',              badgeClass: 'bg-[#8E8E93]/10 text-[#8E8E93] border border-[#8E8E93]/20 font-semibold px-2.5 py-0.5 rounded-full text-[11px]', dot: 'bg-[#8E8E93]' },
+  { id: 'critical', label: 'Critical', desc: 'Imminent threat to life',  badgeClass: 'bg-[#C62828]/10 text-[#C62828] border border-[#C62828]/20 font-medium px-2.5 py-0.5 rounded-full text-[11px]', dot: 'bg-[#C62828]' },
+  { id: 'high',     label: 'High',     desc: 'Severe accident / vehicle risk', badgeClass: 'bg-[#B7791F]/10 text-[#B7791F] border border-[#B7791F]/20 font-medium px-2.5 py-0.5 rounded-full text-[11px]', dot: 'bg-[#B7791F]' },
+  { id: 'medium',   label: 'Medium',   desc: 'Pedestrian obstacle',       badgeClass: 'bg-[#4F46E5]/10 text-[#4F46E5] border border-[#4F46E5]/20 font-medium px-2.5 py-0.5 rounded-full text-[11px]', dot: 'bg-[#4F46E5]' },
+  { id: 'low',      label: 'Low',      desc: 'Minor defect',              badgeClass: 'bg-[#F3F3F0] text-[#626262] border border-[#E7E5E0] font-medium px-2.5 py-0.5 rounded-full text-[11px]', dot: 'bg-[#858585]' },
 ]
 
 // ── Complete 5-State Workflow (Blueprint Section 6) ─────────────────────────
@@ -21,35 +21,35 @@ export const STATUS_WORKFLOW = {
   open: {
     id: 'open',
     label: 'Open',
-    badgeClass: 'bg-[#FF3B30]/10 text-[#FF3B30] border border-[#FF3B30]/20 text-[11px] font-semibold px-2.5 py-0.5 rounded-full inline-block',
+    badgeClass: 'bg-[#C62828]/10 text-[#C62828] border border-[#C62828]/20 text-[11px] font-medium px-2.5 py-0.5 rounded-full inline-block',
     stepNumber: 1,
     desc: 'Newly reported, awaiting municipal triage'
   },
   acknowledged: {
     id: 'acknowledged',
     label: 'Acknowledged',
-    badgeClass: 'bg-[#5856D6]/10 text-[#5856D6] border border-[#5856D6]/20 text-[11px] font-semibold px-2.5 py-0.5 rounded-full inline-block',
+    badgeClass: 'bg-[#4F46E5]/10 text-[#4F46E5] border border-[#4F46E5]/20 text-[11px] font-medium px-2.5 py-0.5 rounded-full inline-block',
     stepNumber: 2,
     desc: 'Department reviewed and logged in work-order backlog'
   },
   in_progress: {
     id: 'in_progress',
     label: 'In Progress',
-    badgeClass: 'bg-[#FF9500]/10 text-[#FF9500] border border-[#FF9500]/20 text-[11px] font-semibold px-2.5 py-0.5 rounded-full inline-block',
+    badgeClass: 'bg-[#B7791F]/10 text-[#B7791F] border border-[#B7791F]/20 text-[11px] font-medium px-2.5 py-0.5 rounded-full inline-block',
     stepNumber: 3,
     desc: 'Field crew assigned on-site for physical repair'
   },
   pending_verification: {
     id: 'pending_verification',
     label: 'Resolved — Pending Verification',
-    badgeClass: 'bg-[#0071E3]/10 text-[#0071E3] border border-[#0071E3]/20 text-[11px] font-semibold px-2.5 py-0.5 rounded-full inline-block',
+    badgeClass: 'bg-[#0F8B72]/10 text-[#0F8B72] border border-[#0F8B72]/20 text-[11px] font-medium px-2.5 py-0.5 rounded-full inline-block',
     stepNumber: 4,
     desc: 'Contractor uploaded "AFTER" photo proof, awaiting inspection'
   },
   verified_resolved: {
     id: 'verified_resolved',
     label: 'Verified Resolved',
-    badgeClass: 'bg-[#34C759]/10 text-[#34C759] border border-[#34C759]/20 text-[11px] font-semibold px-2.5 py-0.5 rounded-full inline-block',
+    badgeClass: 'bg-[#15803D]/10 text-[#15803D] border border-[#15803D]/20 text-[11px] font-medium px-2.5 py-0.5 rounded-full inline-block',
     stepNumber: 5,
     desc: 'Passed quality audit. Repair confirmed complete.'
   },

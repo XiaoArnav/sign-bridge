@@ -9,9 +9,9 @@
   }
   
   html, body {
-    background-color: #F5F5F7;
-    color: #1D1D1F;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #FAF9F6;
+    color: #171717;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
@@ -24,77 +24,56 @@
   }
 }
 
-/* ── Apple Minimalist Clean Surfaces ───────────────────────────────────────── */
-.apple-card {
+/* ── Sarvam AI Warm-White Clean Surfaces ───────────────────────────────────── */
+.sarvam-card, .apple-card, .rasta-surface {
   background-color: #FFFFFF;
-  border: 1px solid #E5E5EA;
-  border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  border: 1px solid #E7E5E0;
+  border-radius: 0.875rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.apple-card-interactive {
+.sarvam-card-interactive, .apple-card-interactive, .rasta-surface-interactive {
   background-color: #FFFFFF;
-  border: 1px solid #E5E5EA;
-  border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  border: 1px solid #E7E5E0;
+  border-radius: 0.875rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
 }
-.apple-card-interactive:hover {
-  border-color: #D2D2D7;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
+.sarvam-card-interactive:hover, .apple-card-interactive:hover, .rasta-surface-interactive:hover {
+  border-color: #D3D0C9;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
   transform: translateY(-1px);
 }
-.apple-card-interactive:active {
+.sarvam-card-interactive:active, .apple-card-interactive:active, .rasta-surface-interactive:active {
   transform: scale(0.99);
 }
 
-/* Backward-compatible surface aliases */
-.rasta-surface {
-  background-color: #FFFFFF;
-  border: 1px solid #E5E5EA;
-  border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-}
-
-.rasta-surface-interactive {
-  background-color: #FFFFFF;
-  border: 1px solid #E5E5EA;
-  border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  cursor: pointer;
-}
-.rasta-surface-interactive:hover {
-  border-color: #D2D2D7;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-}
-
-/* ── Apple High-Contrast Map Floating Overlays ─────────────────────────────── */
+/* ── Sarvam High-Contrast Map Floating Overlays ────────────────────────────── */
 .map-overlay-panel {
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid #E5E5EA;
-  color: #1D1D1F;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  background-color: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid #E7E5E0;
+  color: #171717;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 .map-overlay-subcard {
-  background-color: #F5F5F7;
-  border: 1px solid #E5E5EA;
-  color: #1D1D1F;
+  background-color: #F3F3F0;
+  border: 1px solid #E7E5E0;
+  color: #171717;
 }
 
 /* ── Standardized Accessible Buttons (min 44px height) ─────────────────────── */
-.btn-apple-primary, .btn-rasta-primary {
+.btn-sarvam-primary, .btn-apple-primary, .btn-rasta-primary {
   min-height: 44px;
-  background-color: #0071E3;
+  background-color: #4F46E5;
   color: #FFFFFF;
-  font-weight: 600;
+  font-weight: 500;
   padding: 0.625rem 1.25rem;
-  border-radius: 9999px;
+  border-radius: 0.75rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -103,28 +82,28 @@
   cursor: pointer;
   border: none;
   touch-action: manipulation;
-  box-shadow: 0 1px 3px rgba(0, 113, 227, 0.2);
+  box-shadow: 0 1px 2px rgba(79, 70, 229, 0.15);
 }
-.btn-apple-primary:hover, .btn-rasta-primary:hover {
-  background-color: #0077ED;
+.btn-sarvam-primary:hover, .btn-apple-primary:hover, .btn-rasta-primary:hover {
+  background-color: #4338CA;
 }
-.btn-apple-primary:active, .btn-rasta-primary:active {
-  background-color: #0062C4;
+.btn-sarvam-primary:active, .btn-apple-primary:active, .btn-rasta-primary:active {
+  background-color: #3730A3;
   transform: scale(0.98);
 }
-.btn-apple-primary:disabled, .btn-rasta-primary:disabled {
+.btn-sarvam-primary:disabled, .btn-apple-primary:disabled, .btn-rasta-primary:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
-.btn-apple-secondary, .btn-rasta-secondary {
+.btn-sarvam-secondary, .btn-apple-secondary, .btn-rasta-secondary {
   min-height: 44px;
-  background-color: #F2F2F7;
-  color: #1D1D1F;
-  border: 1px solid #E5E5EA;
-  font-weight: 600;
+  background-color: #FFFFFF;
+  color: #171717;
+  border: 1px solid #E7E5E0;
+  font-weight: 500;
   padding: 0.625rem 1.25rem;
-  border-radius: 9999px;
+  border-radius: 0.75rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -133,20 +112,21 @@
   cursor: pointer;
   touch-action: manipulation;
 }
-.btn-apple-secondary:hover, .btn-rasta-secondary:hover {
-  background-color: #E5E5EA;
+.btn-sarvam-secondary:hover, .btn-apple-secondary:hover, .btn-rasta-secondary:hover {
+  background-color: #F3F3F0;
+  border-color: #D3D0C9;
 }
-.btn-apple-secondary:active, .btn-rasta-secondary:active {
+.btn-sarvam-secondary:active, .btn-apple-secondary:active, .btn-rasta-secondary:active {
   transform: scale(0.98);
 }
 
 .btn-rasta-teal {
   min-height: 44px;
-  background-color: #0071E3;
+  background-color: #0F8B72;
   color: #FFFFFF;
-  font-weight: 600;
+  font-weight: 500;
   padding: 0.625rem 1.25rem;
-  border-radius: 9999px;
+  border-radius: 0.75rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -157,14 +137,14 @@
   touch-action: manipulation;
 }
 .btn-rasta-teal:hover {
-  background-color: #0077ED;
+  background-color: #0B6D59;
 }
 
-/* ── Apple-Style Restrained Badges ─────────────────────────────────────────── */
+/* ── Sarvam-Style Restrained Badges ────────────────────────────────────────── */
 .badge-critical {
-  background-color: #FFF1F0;
-  color: #D32F2F;
-  border: 1px solid #FFCDD2;
+  background-color: rgba(198, 40, 40, 0.08);
+  color: #C62828;
+  border: 1px solid rgba(198, 40, 40, 0.2);
   font-weight: 600;
   padding: 0.2rem 0.625rem;
   border-radius: 9999px;
@@ -175,9 +155,9 @@
 }
 
 .badge-high {
-  background-color: #FFF8E1;
-  color: #E65100;
-  border: 1px solid #FFE082;
+  background-color: rgba(183, 121, 31, 0.08);
+  color: #B7791F;
+  border: 1px solid rgba(183, 121, 31, 0.2);
   font-weight: 600;
   padding: 0.2rem 0.625rem;
   border-radius: 9999px;
@@ -188,9 +168,9 @@
 }
 
 .badge-medium {
-  background-color: #E3F2FD;
-  color: #0D47A1;
-  border: 1px solid #BBDEFB;
+  background-color: rgba(79, 70, 229, 0.08);
+  color: #4F46E5;
+  border: 1px solid rgba(79, 70, 229, 0.2);
   font-weight: 600;
   padding: 0.2rem 0.625rem;
   border-radius: 9999px;
@@ -201,9 +181,22 @@
 }
 
 .badge-verified {
-  background-color: #E8F5E9;
-  color: #1B5E20;
-  border: 1px solid #C8E6C9;
+  background-color: rgba(21, 128, 61, 0.08);
+  color: #15803D;
+  border: 1px solid rgba(21, 128, 61, 0.2);
+  font-weight: 600;
+  padding: 0.2rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.badge-live {
+  background-color: rgba(15, 139, 114, 0.08);
+  color: #0F8B72;
+  border: 1px solid rgba(15, 139, 114, 0.2);
   font-weight: 600;
   padding: 0.2rem 0.625rem;
   border-radius: 9999px;
@@ -220,7 +213,7 @@
 
 /* ── Leaflet Clean Styling Overrides ───────────────────────────────────────── */
 .leaflet-container {
-  background: #E5E5EA !important;
+  background: #FAF9F6 !important;
   font-family: inherit !important;
   z-index: 0 !important;
   width: 100% !important;
@@ -229,10 +222,10 @@
 
 .leaflet-popup-content-wrapper {
   background: #FFFFFF !important;
-  color: #1D1D1F !important;
-  border: 1px solid #E5E5EA !important;
-  border-radius: 1rem !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+  color: #171717 !important;
+  border: 1px solid #E7E5E0 !important;
+  border-radius: 0.875rem !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
   padding: 0 !important;
 }
 
@@ -242,19 +235,19 @@
 
 .leaflet-popup-tip {
   background: #FFFFFF !important;
-  border: 1px solid #E5E5EA !important;
+  border: 1px solid #E7E5E0 !important;
 }
 
 .leaflet-control-attribution {
-  background: rgba(255, 255, 255, 0.85) !important;
-  color: #6E6E73 !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #626262 !important;
   font-size: 9px !important;
   border-radius: 6px !important;
   padding: 2px 6px !important;
-  border: 1px solid #E5E5EA !important;
+  border: 1px solid #E7E5E0 !important;
 }
 .leaflet-control-attribution a {
-  color: #0071E3 !important;
+  color: #4F46E5 !important;
 }
 
 @media (max-width: 1023px) {
@@ -299,9 +292,9 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D2D2D7;
+  background: #E7E5E0;
   border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #86868B;
+  background: #D3D0C9;
 }

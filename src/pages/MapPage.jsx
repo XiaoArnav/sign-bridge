@@ -57,14 +57,14 @@ function getLeafletPin(color, isResolved) {
   return pinIconCache.get(key)
 }
 
-// Distinctive User Location Marker: Pulsing Apple Blue halo + crisp core
+// Distinctive User Location Marker: Pulsing Sarvam Indigo halo + crisp core
 const userLocationIcon = L.divIcon({
   className: 'user-location-marker-container',
   html: `
     <div style="position:relative; width:28px; height:28px; display:flex; align-items:center; justify-content:center;">
-      <div class="user-location-pulse" style="position:absolute; inset:-8px; border-radius:50%; background:rgba(0, 113, 227, 0.25); pointer-events:none;"></div>
-      <div style="position:absolute; inset:-2px; border-radius:50%; background:rgba(0, 113, 227, 0.2);"></div>
-      <div style="width:16px; height:16px; border-radius:50%; background:#0071E3; border:3px solid #FFFFFF; box-shadow:0 1px 4px rgba(0,0,0,0.12); position:relative; z-index:2;"></div>
+      <div class="user-location-pulse" style="position:absolute; inset:-8px; border-radius:50%; background:rgba(79, 70, 229, 0.25); pointer-events:none;"></div>
+      <div style="position:absolute; inset:-2px; border-radius:50%; background:rgba(79, 70, 229, 0.2);"></div>
+      <div style="width:16px; height:16px; border-radius:50%; background:#4F46E5; border:3px solid #FFFFFF; box-shadow:0 1px 4px rgba(0,0,0,0.12); position:relative; z-index:2;"></div>
     </div>
   `,
   iconSize: [28, 28],
@@ -72,10 +72,10 @@ const userLocationIcon = L.divIcon({
 })
 
 const PIN_COLORS = {
-  critical: '#FF3B30', // Apple Red
-  high: '#FF9500',     // Apple Amber
-  medium: '#0071E3',   // Apple Blue
-  low: '#8E8E93',      // Apple Gray
+  critical: '#C62828', // Crimson
+  high: '#B7791F',     // Warm Amber
+  medium: '#4F46E5',   // Indigo
+  low: '#858585',      // Neutral Gray
 }
 
 function timeAgo(dateStr) {
@@ -328,25 +328,25 @@ export default function MapPage({ onNavigateReport }) {
   return (
     <div className="flex flex-col lg:flex-row h-full bg-[#F5F5F7] relative overflow-hidden font-sans">
       {/* ── Desktop Left Sidebar (>=1024px) ─────────────────────────── */}
-      <div className="hidden lg:flex flex-col w-96 bg-white border-r border-[#E5E5EA] z-20 flex-shrink-0">
-        <div className="p-4 border-b border-[#E5E5EA] space-y-3">
+      <div className="hidden lg:flex flex-col w-96 bg-white border-r border-[#E7E5E0] z-20 flex-shrink-0">
+        <div className="p-4 border-b border-[#E7E5E0] space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-[#1D1D1F]">Road Hazards Explorer</h2>
-            <span className="text-xs font-semibold text-[#0071E3]">
+            <h2 className="text-sm font-semibold text-[#171717]">Road Hazards Explorer</h2>
+            <span className="text-xs font-semibold text-[#4F46E5]">
               {filtered.length} in {selectedCity.name}
             </span>
           </div>
 
-          {/* Apple-Style Segmented City Switcher */}
-          <div className="grid grid-cols-4 gap-1 p-1 bg-[#F5F5F7] rounded-xl border border-[#E5E5EA]">
+          {/* Segmented City Switcher */}
+          <div className="grid grid-cols-4 gap-1 p-1 bg-[#F3F3F0] rounded-xl border border-[#E7E5E0]">
             {CITIES.map(c => (
               <button
                 key={c.id}
                 onClick={() => handleCitySelect(c)}
                 className={`py-1 text-[11px] font-medium rounded-lg transition-all cursor-pointer ${
                   selectedCity.id === c.id
-                    ? 'bg-white text-[#1D1D1F] shadow-apple-sm font-semibold'
-                    : 'text-[#6E6E73] hover:text-[#1D1D1F]'
+                    ? 'bg-white text-[#171717] shadow-sm font-semibold'
+                    : 'text-[#626262] hover:text-[#171717]'
                 }`}
               >
                 {c.name.split('-')[0]}
@@ -356,37 +356,37 @@ export default function MapPage({ onNavigateReport }) {
 
           {/* Search Box */}
           <div className="relative">
-            <Search className="w-4 h-4 text-[#86868B] absolute left-3 top-2.5" />
+            <Search className="w-4 h-4 text-[#858585] absolute left-3 top-2.5" />
             <input
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Search street, area or ID..."
-              className="w-full bg-[#F5F5F7] border border-[#E5E5EA] rounded-xl pl-9 pr-3 py-2 text-xs text-[#1D1D1F] placeholder-[#86868B] focus:outline-none focus:border-[#0071E3] transition-colors"
+              className="w-full bg-[#F3F3F0] border border-[#E7E5E0] rounded-xl pl-9 pr-3 py-2 text-xs text-[#171717] placeholder-[#858585] focus:outline-none focus:border-[#4F46E5] transition-colors"
             />
           </div>
 
           {/* Route Threat Scanner Trigger */}
           <button
             onClick={() => setShowRouteCopilot(r => !r)}
-            className={`w-full py-2.5 px-3 rounded-xl border flex items-center justify-between text-xs font-medium transition-all cursor-pointer ${
+            className={`w-full py-2 px-3 rounded-xl border flex items-center justify-between text-xs font-medium transition-all cursor-pointer ${
               showRouteCopilot
-                ? 'bg-[#0071E3]/10 border-[#0071E3] text-[#0071E3]'
-                : 'bg-white border-[#E5E5EA] text-[#1D1D1F] hover:border-[#0071E3]/50 shadow-apple-sm'
+                ? 'bg-[#4F46E5]/10 border-[#4F46E5]/30 text-[#4F46E5]'
+                : 'bg-white border-[#E7E5E0] text-[#171717] hover:border-[#4F46E5]/50 shadow-sm'
             }`}
           >
             <div className="flex items-center gap-2">
-              <Route className="w-4 h-4 text-[#0071E3]" />
+              <Route className="w-4 h-4 text-[#4F46E5]" />
               <span>{showRouteCopilot ? 'Hide Route Threat Scanner' : 'Safe Route Threat Scanner'}</span>
             </div>
-            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-black/5 text-[#0071E3]">
+            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-[#4F46E5]/10 text-[#4F46E5]">
               AI SCAN
             </span>
           </button>
         </div>
 
         {/* Scrollable Incident List */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-[#F5F5F7]">
+        <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-[#FAF9F6]">
           {filtered.map(item => {
             const isSelected = selectedIncident?.id === item.id
             const cat = getCategory(item.category)
@@ -396,26 +396,26 @@ export default function MapPage({ onNavigateReport }) {
               <div
                 key={item.id}
                 onClick={() => setSelectedIncident(item)}
-                className={`p-3 rounded-xl border transition-all cursor-pointer bg-white ${
+                className={`p-3.5 rounded-xl border transition-all cursor-pointer bg-white ${
                   isSelected
-                    ? 'border-[#0071E3] shadow-apple ring-2 ring-[#0071E3]/20'
-                    : 'border-[#E5E5EA] hover:border-[#D2D2D7] shadow-apple-sm'
+                    ? 'border-[#4F46E5] ring-2 ring-[#4F46E5]/15'
+                    : 'border-[#E7E5E0] hover:border-[#D3D0C9]'
                 }`}
               >
                 <div className="flex items-center justify-between gap-1 mb-1">
-                  <span className="text-xs font-semibold text-[#1D1D1F] flex items-center gap-1.5 truncate">
+                  <span className="text-xs font-semibold text-[#171717] flex items-center gap-1.5 truncate">
                     <span>{cat.emoji}</span>
                     <span className="truncate">{cat.label}</span>
                   </span>
                   <span className={sev.badgeClass}>{sev.label}</span>
                 </div>
 
-                <p className="text-[11px] text-[#6E6E73] truncate font-medium">{item.title}</p>
-                <p className="text-[10px] text-[#86868B] truncate mt-0.5">📍 {item.address}</p>
+                <p className="text-[11px] text-[#626262] truncate font-medium">{item.title}</p>
+                <p className="text-[10px] text-[#858585] truncate mt-0.5">📍 {item.address}</p>
 
-                <div className="flex items-center justify-between pt-2 border-t border-[#E5E5EA] text-[10px] text-[#86868B] mt-2">
-                  <span className="font-mono text-[#0071E3] font-medium">{item.id}</span>
-                  <span className="text-[#1D1D1F] font-semibold">{item.votes} upvotes</span>
+                <div className="flex items-center justify-between pt-2 border-t border-[#E7E5E0] text-[10px] text-[#858585] mt-2">
+                  <span className="font-mono text-[#4F46E5] font-medium">{item.id}</span>
+                  <span className="text-[#171717] font-semibold">{item.votes} upvotes</span>
                 </div>
               </div>
             )
@@ -471,7 +471,7 @@ export default function MapPage({ onNavigateReport }) {
             <Polyline
               positions={SAMPLE_ROUTES.directHazardous}
               pathOptions={{
-                color: '#FF3B30',
+                color: '#C62828',
                 weight: 5,
                 dashArray: '8, 8',
                 opacity: 0.95,
@@ -479,12 +479,12 @@ export default function MapPage({ onNavigateReport }) {
             />
           )}
 
-          {/* Recommended Safe Detour Polyline (Solid Apple Green) */}
+          {/* Recommended Safe Detour Polyline (Solid Forest Green) */}
           {showRouteCopilot && activeRouteType === 'safe' && (
             <Polyline
               positions={SAMPLE_ROUTES.safeDetour}
               pathOptions={{
-                color: '#34C759',
+                color: '#15803D',
                 weight: 5,
                 opacity: 0.95,
               }}
@@ -499,9 +499,9 @@ export default function MapPage({ onNavigateReport }) {
                   center={[userLocation.lat, userLocation.lng]}
                   radius={userLocation.accuracy}
                   pathOptions={{
-                    color: '#0071E3',
-                    fillColor: '#0071E3',
-                    fillOpacity: 0.1,
+                    color: '#4F46E5',
+                    fillColor: '#4F46E5',
+                    fillOpacity: 0.08,
                     weight: 1.5,
                     dashArray: '4, 4',
                   }}
@@ -514,22 +514,22 @@ export default function MapPage({ onNavigateReport }) {
                 zIndexOffset={1000}
               >
                 <Popup>
-                  <div className="p-1 space-y-1.5 text-xs text-[#1D1D1F]">
-                    <div className="flex items-center gap-1.5 font-semibold text-[#0071E3]">
-                      <span className="w-2 h-2 rounded-full bg-[#0071E3] animate-pulse"></span>
+                  <div className="p-1 space-y-1.5 text-xs text-[#171717]">
+                    <div className="flex items-center gap-1.5 font-semibold text-[#4F46E5]">
+                      <span className="w-2 h-2 rounded-full bg-[#4F46E5] animate-pulse"></span>
                       <span>Your Live Position</span>
                     </div>
-                    <div className="text-[11px] text-[#6E6E73] font-mono bg-[#F5F5F7] p-1.5 rounded border border-[#E5E5EA]">
+                    <div className="text-[11px] text-[#626262] font-mono bg-[#F3F3F0] p-1.5 rounded-lg border border-[#E7E5E0]">
                       {userLocation.lat.toFixed(5)}, {userLocation.lng.toFixed(5)}
                     </div>
                     {userLocation.accuracy > 0 && (
-                      <div className="text-[10px] text-[#86868B]">
+                      <div className="text-[10px] text-[#858585]">
                         Accuracy: ±{Math.round(userLocation.accuracy)}m
                       </div>
                     )}
-                    <div className="text-[10px] text-[#86868B] pt-1 border-t border-[#E5E5EA] flex items-center justify-between">
+                    <div className="text-[10px] text-[#858585] pt-1 border-t border-[#E7E5E0] flex items-center justify-between">
                       <span>Status: GPS Locked</span>
-                      <span className="text-[#34C759] font-medium font-mono">
+                      <span className="text-[#15803D] font-medium font-mono">
                         {new Date(userLocation.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
@@ -542,7 +542,7 @@ export default function MapPage({ onNavigateReport }) {
           {/* Incident Pins with Memoized Icon Generation */}
           {filtered.map(item => {
             const isResolved = item.status === 'verified_resolved'
-            const pinColor = isResolved ? '#34C759' : PIN_COLORS[item.severity] || '#FF3B30'
+            const pinColor = isResolved ? '#15803D' : PIN_COLORS[item.severity] || '#C62828'
 
             return (
               <Marker
@@ -560,21 +560,21 @@ export default function MapPage({ onNavigateReport }) {
         {/* ── Safe Route Threat Scanner Floating Panel ─────────────────── */}
         {showRouteCopilot && (
           <div
-            className="absolute top-16 lg:top-4 left-3 right-3 lg:left-auto lg:right-4 z-20 w-auto lg:w-96 rounded-2xl p-4.5 space-y-3.5 bg-white/95 backdrop-blur-md shadow-apple-lg border border-[#E5E5EA] text-[#1D1D1F] text-xs max-h-[80vh] overflow-y-auto animate-fade-in"
+            className="absolute top-16 lg:top-4 left-3 right-3 lg:left-auto lg:right-4 z-20 w-auto lg:w-96 rounded-2xl p-4.5 space-y-3.5 bg-white/98 backdrop-blur-md shadow-sm border border-[#E7E5E0] text-[#171717] text-xs max-h-[80vh] overflow-y-auto animate-fade-in"
             role="region"
             aria-label="Safe Route Threat Scanner Panel"
           >
             {/* Header: Title and Controls */}
-            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#E5E5EA]">
+            <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-[#E7E5E0]">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 rounded-xl bg-[#4F46E5]/10 text-[#4F46E5] flex items-center justify-center flex-shrink-0">
                   <Route className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-sm text-[#1D1D1F] leading-none">
+                  <h3 className="font-semibold text-sm text-[#171717] leading-none">
                     Safe Route Threat Scanner
                   </h3>
-                  <span className="text-[10px] text-[#86868B] mt-0.5 block">
+                  <span className="text-[10px] text-[#858585] mt-0.5 block">
                     AI GIS Commute Risk Simulation
                   </span>
                 </div>
@@ -583,7 +583,7 @@ export default function MapPage({ onNavigateReport }) {
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setIsRouteCollapsed(c => !c)}
-                  className="sm:hidden p-1.5 rounded-lg text-[#86868B] hover:text-[#1D1D1F] hover:bg-[#F5F5F7] cursor-pointer"
+                  className="sm:hidden p-1.5 rounded-lg text-[#858585] hover:text-[#171717] hover:bg-[#F3F3F0] cursor-pointer"
                   aria-label={isRouteCollapsed ? 'Expand route scanner' : 'Collapse route scanner'}
                 >
                   {isRouteCollapsed ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
@@ -591,7 +591,7 @@ export default function MapPage({ onNavigateReport }) {
 
                 <button
                   onClick={() => setShowRouteCopilot(false)}
-                  className="p-1.5 rounded-lg text-[#86868B] hover:text-[#1D1D1F] hover:bg-[#F5F5F7] cursor-pointer"
+                  className="p-1.5 rounded-lg text-[#858585] hover:text-[#171717] hover:bg-[#F3F3F0] cursor-pointer"
                   aria-label="Close safe route threat scanner"
                 >
                   <X className="w-4 h-4" />
@@ -600,9 +600,9 @@ export default function MapPage({ onNavigateReport }) {
             </div>
 
             {/* Subtitle Corridor */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] text-[#6E6E73]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] text-[#626262]">
               <span>Simulating commute corridor:</span>
-              <span className="font-semibold text-[#1D1D1F] bg-[#F5F5F7] px-2.5 py-0.5 rounded border border-[#E5E5EA] self-start sm:self-auto font-mono">
+              <span className="font-semibold text-[#171717] bg-[#F3F3F0] px-2.5 py-0.5 rounded-lg border border-[#E7E5E0] self-start sm:self-auto font-mono">
                 Koramangala ➔ MG Road
               </span>
             </div>
@@ -618,21 +618,21 @@ export default function MapPage({ onNavigateReport }) {
                     aria-pressed={activeRouteType === 'hazardous'}
                     className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                       activeRouteType === 'hazardous'
-                        ? 'bg-[#FFF5F5] border-[#FF3B30] ring-2 ring-[#FF3B30]/20'
-                        : 'bg-white border-[#E5E5EA] hover:border-[#D2D2D7]'
+                        ? 'bg-[#FFF5F5] border-[#C62828] ring-2 ring-[#C62828]/20'
+                        : 'bg-white border-[#E7E5E0] hover:border-[#D3D0C9]'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="font-semibold text-xs text-[#1D1D1F]">Direct Path</span>
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FFECEB] text-[#D70015]">
+                      <span className="font-semibold text-xs text-[#171717]">Direct Path</span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#C62828]/10 text-[#C62828]">
                         84% Risk
                       </span>
                     </div>
-                    <p className="text-[11px] text-[#6E6E73] flex items-center gap-1.5 font-medium leading-tight">
-                      <AlertTriangle className="w-3.5 h-3.5 text-[#FF3B30] flex-shrink-0" />
+                    <p className="text-[11px] text-[#626262] flex items-center gap-1.5 font-medium leading-tight">
+                      <AlertTriangle className="w-3.5 h-3.5 text-[#C62828] flex-shrink-0" />
                       <span>2 critical hazards</span>
                     </p>
-                    <div className="mt-2 text-[10px] text-[#86868B]">
+                    <div className="mt-2 text-[10px] text-[#858585]">
                       4.8 km · 28 mins
                     </div>
                   </button>
@@ -643,53 +643,53 @@ export default function MapPage({ onNavigateReport }) {
                     aria-pressed={activeRouteType === 'safe'}
                     className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                       activeRouteType === 'safe'
-                        ? 'bg-[#F0FDF4] border-[#34C759] ring-2 ring-[#34C759]/20'
-                        : 'bg-white border-[#E5E5EA] hover:border-[#D2D2D7]'
+                        ? 'bg-[#F0FDF4] border-[#15803D] ring-2 ring-[#15803D]/20'
+                        : 'bg-white border-[#E7E5E0] hover:border-[#D3D0C9]'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="font-semibold text-xs text-[#1D1D1F]">Safe Detour</span>
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#E8F8EE] text-[#248A3D]">
+                      <span className="font-semibold text-xs text-[#171717]">Safe Detour</span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#15803D]/10 text-[#15803D]">
                         12% Risk
                       </span>
                     </div>
-                    <p className="text-[11px] text-[#6E6E73] flex items-center gap-1.5 font-medium leading-tight">
-                      <ShieldCheck className="w-3.5 h-3.5 text-[#34C759] flex-shrink-0" />
+                    <p className="text-[11px] text-[#626262] flex items-center gap-1.5 font-medium leading-tight">
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#15803D] flex-shrink-0" />
                       <span>0 critical hazards</span>
                     </p>
-                    <div className="mt-2 text-[10px] text-[#34C759] font-medium">
+                    <div className="mt-2 text-[10px] text-[#15803D] font-medium">
                       5.6 km (+800m safe bypass)
                     </div>
                   </button>
                 </div>
 
                 {/* Recommendation & Reasoning Section */}
-                <div className="p-3 rounded-xl bg-[#F5F5F7] border border-[#E5E5EA] space-y-2">
+                <div className="p-3 rounded-xl bg-[#F3F3F0] border border-[#E7E5E0] space-y-2">
                   <div className="flex items-center justify-between text-[11px]">
-                    <span className="font-semibold text-[#0071E3] uppercase tracking-wider text-[10px] flex items-center gap-1">
-                      <Info className="w-3.5 h-3.5 text-[#0071E3]" />
+                    <span className="font-semibold text-[#4F46E5] uppercase tracking-wider text-[10px] flex items-center gap-1">
+                      <Info className="w-3.5 h-3.5 text-[#4F46E5]" />
                       Route Assessment
                     </span>
-                    <span className="text-[10px] text-[#86868B]">
+                    <span className="text-[10px] text-[#858585]">
                       {activeRouteType === 'safe' ? 'Safe Detour' : 'Direct Corridor'}
                     </span>
                   </div>
 
-                  <p className="text-[11px] text-[#1D1D1F] leading-relaxed">
+                  <p className="text-[11px] text-[#171717] leading-relaxed">
                     {activeRouteType === 'hazardous' ? (
                       <span>
-                        <strong className="text-[#D70015]">Direct Path Caution:</strong> Corridor intersects dangling 11kV transformer wire (<span className="font-mono text-[#D70015]">RASTA-8042</span>) and uncovered sewer pit (<span className="font-mono text-[#D70015]">RASTA-7911</span>). Imminent threat to life during rainfall.
+                        <strong className="text-[#C62828]">Direct Path Caution:</strong> Corridor intersects dangling 11kV transformer wire (<span className="font-mono text-[#C62828]">RASTA-8042</span>) and uncovered sewer pit (<span className="font-mono text-[#C62828]">RASTA-7911</span>). Imminent threat to life during rainfall.
                       </span>
                     ) : (
                       <span>
-                        <strong className="text-[#248A3D]">Recommended Detour:</strong> Domlur elevated arterial bypass routes around flooded underpasses and high-voltage electrical hazards with 0 critical defects.
+                        <strong className="text-[#15803D]">Recommended Detour:</strong> Domlur elevated arterial bypass routes around flooded underpasses and high-voltage electrical hazards with 0 critical defects.
                       </span>
                     )}
                   </p>
 
-                  <div className="pt-2 border-t border-[#E5E5EA] flex items-center justify-between text-[10px] text-[#86868B]">
+                  <div className="pt-2 border-t border-[#E7E5E0] flex items-center justify-between text-[10px] text-[#858585]">
                     <span>Simulated via municipal coordinates</span>
-                    <span className="text-[#0071E3] font-medium">GIS Verified</span>
+                    <span className="text-[#4F46E5] font-medium">GIS Verified</span>
                   </div>
                 </div>
               </>
@@ -707,29 +707,29 @@ export default function MapPage({ onNavigateReport }) {
           {geoStatusMessage && (
             <div
               role="status"
-              className="px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 max-w-xs shadow-apple-lg bg-white/95 backdrop-blur-md border border-[#E5E5EA] text-[#1D1D1F] animate-fade-in"
+              className="px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 max-w-xs shadow-sm bg-white/98 backdrop-blur-md border border-[#E7E5E0] text-[#171717] animate-fade-in"
             >
               {geoStatusMessage.type === 'loading' && (
-                <Loader2 className="w-4 h-4 text-[#0071E3] animate-spin flex-shrink-0" />
+                <Loader2 className="w-4 h-4 text-[#4F46E5] animate-spin flex-shrink-0" />
               )}
               {geoStatusMessage.type === 'success' && (
-                <CheckCircle2 className="w-4 h-4 text-[#34C759] flex-shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-[#15803D] flex-shrink-0" />
               )}
               {geoStatusMessage.type === 'error' && (
-                <AlertTriangle className="w-4 h-4 text-[#FF3B30] flex-shrink-0" />
+                <AlertTriangle className="w-4 h-4 text-[#C62828] flex-shrink-0" />
               )}
               {geoStatusMessage.type === 'warning' && (
-                <AlertOctagon className="w-4 h-4 text-[#FF9500] flex-shrink-0" />
+                <AlertOctagon className="w-4 h-4 text-[#B7791F] flex-shrink-0" />
               )}
               {geoStatusMessage.type === 'info' && (
-                <Info className="w-4 h-4 text-[#0071E3] flex-shrink-0" />
+                <Info className="w-4 h-4 text-[#4F46E5] flex-shrink-0" />
               )}
               <span className="font-medium leading-tight text-[11px] flex-1">
                 {geoStatusMessage.text}
               </span>
               <button
                 onClick={() => setGeoStatusMessage(null)}
-                className="text-[#86868B] hover:text-[#1D1D1F] p-0.5 ml-1 cursor-pointer"
+                className="text-[#858585] hover:text-[#171717] p-0.5 ml-1 cursor-pointer"
                 aria-label="Dismiss message"
               >
                 <X className="w-3.5 h-3.5" />
@@ -745,58 +745,58 @@ export default function MapPage({ onNavigateReport }) {
               disabled={isLocating}
               aria-pressed={isTracking}
               aria-label={isTracking ? 'Disable continuous live GPS tracking' : 'Enable continuous live GPS tracking'}
-              className={`h-11 px-3.5 rounded-full text-xs font-medium border transition-all cursor-pointer flex items-center gap-2 shadow-apple bg-white ${
+              className={`h-11 px-3.5 rounded-full text-xs font-medium border transition-all cursor-pointer flex items-center gap-2 shadow-sm bg-white ${
                 isTracking
-                  ? 'border-[#0071E3] text-[#0071E3] ring-2 ring-[#0071E3]/20'
-                  : 'border-[#E5E5EA] text-[#6E6E73] hover:text-[#1D1D1F]'
+                  ? 'border-[#4F46E5] text-[#4F46E5] ring-2 ring-[#4F46E5]/20'
+                  : 'border-[#E7E5E0] text-[#626262] hover:text-[#171717]'
               }`}
             >
               <span
                 className={`w-2 h-2 rounded-full ${
-                  isTracking ? 'bg-[#0071E3] animate-ping' : 'bg-[#86868B]'
+                  isTracking ? 'bg-[#4F46E5] animate-ping' : 'bg-[#858585]'
                 }`}
               />
               <span className="text-[11px] font-semibold">{isTracking ? 'Tracking Live' : 'Track Mode'}</span>
             </button>
 
-            {/* Primary Circular "Show My Location" Button (Apple-Inspired White Surface) */}
+            {/* Primary Circular "Show My Location" Button (White Surface with Indigo Arrow) */}
             <button
               onClick={() => locateUser(true)}
               disabled={isLocating}
               aria-label={isLocating ? 'Acquiring live location…' : 'Show my location'}
               title="Show my location"
-              className="w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-white hover:bg-[#F5F5F7] active:scale-95 border border-[#E5E5EA] hover:border-[#D2D2D7] text-[#0071E3] shadow-apple-lg flex items-center justify-center transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed group relative"
+              className="w-12 h-12 min-w-[48px] min-h-[48px] rounded-full bg-white hover:bg-[#F3F3F0] active:scale-95 border border-[#E7E5E0] hover:border-[#D3D0C9] text-[#4F46E5] shadow-sm flex items-center justify-center transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed group relative"
             >
               {isLocating ? (
-                <Loader2 className="w-5 h-5 text-[#0071E3] animate-spin" />
+                <Loader2 className="w-5 h-5 text-[#4F46E5] animate-spin" />
               ) : isTracking ? (
-                <Compass className="w-5 h-5 text-[#0071E3] animate-pulse" />
+                <Compass className="w-5 h-5 text-[#4F46E5] animate-pulse" />
               ) : (
-                <Navigation className="w-5 h-5 transition-transform group-hover:scale-110 fill-[#0071E3]/15" />
+                <Navigation className="w-5 h-5 transition-transform group-hover:scale-110 fill-[#4F46E5]/15" />
               )}
 
               {userLocation && !isLocating && (
-                <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-[#34C759] border-2 border-white" />
+                <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-[#15803D] border-2 border-white" />
               )}
             </button>
           </div>
         </div>
       </div>
 
-      {/* ── Selected Incident Details Panel (Apple Sheet / Floating Card) ── */}
+      {/* ── Selected Incident Details Panel (Sheet / Floating Card) ── */}
       {selectedIncident && (
         <div
-          className="fixed inset-x-0 bottom-0 lg:bottom-4 lg:right-4 lg:left-auto lg:w-96 z-50 p-4 sm:p-5 pb-24 lg:pb-5 rounded-t-3xl lg:rounded-2xl shadow-apple-lg bg-white/95 backdrop-blur-md border border-[#E5E5EA] text-[#1D1D1F] animate-fade-in max-h-[85vh] lg:max-h-[calc(100vh-14rem)] overflow-y-auto space-y-3.5"
+          className="fixed inset-x-0 bottom-0 lg:bottom-4 lg:right-4 lg:left-auto lg:w-96 z-50 p-4 sm:p-5 pb-24 lg:pb-5 rounded-t-3xl lg:rounded-2xl shadow-sm bg-white/98 backdrop-blur-md border border-[#E7E5E0] text-[#171717] animate-fade-in max-h-[85vh] lg:max-h-[calc(100vh-14rem)] overflow-y-auto space-y-3.5"
           role="dialog"
           aria-label={`Incident details for ${selectedIncident.id}`}
         >
           {/* Mobile Drag Indicator Handle */}
-          <div className="lg:hidden w-12 h-1 bg-[#D2D2D7] rounded-full mx-auto -mt-1 mb-2" />
+          <div className="lg:hidden w-12 h-1 bg-[#D3D0C9] rounded-full mx-auto -mt-1 mb-2" />
 
           {/* 1. Incident ID and Close Button */}
-          <div className="flex items-center justify-between pb-2 border-b border-[#E5E5EA]">
+          <div className="flex items-center justify-between pb-2 border-b border-[#E7E5E0]">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-mono font-semibold text-[#0071E3] px-2 py-0.5 rounded bg-[#0071E3]/10">
+              <span className="text-xs font-mono font-semibold text-[#4F46E5] px-2 py-0.5 rounded-lg bg-[#4F46E5]/10">
                 {selectedIncident.id}
               </span>
               {selectedIncident.isDemo ? (
@@ -816,7 +816,7 @@ export default function MapPage({ onNavigateReport }) {
 
             <button
               onClick={() => setSelectedIncident(null)}
-              className="p-1.5 rounded-lg text-[#86868B] hover:text-[#1D1D1F] hover:bg-[#F5F5F7] cursor-pointer"
+              className="p-1.5 rounded-lg text-[#858585] hover:text-[#171717] hover:bg-[#F3F3F0] cursor-pointer"
               aria-label="Close incident details"
             >
               <X className="w-5 h-5" />
@@ -826,7 +826,7 @@ export default function MapPage({ onNavigateReport }) {
           {/* 2. Hazard Category and Headline */}
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-semibold text-[#1D1D1F] px-2.5 py-1 rounded-lg bg-[#F5F5F7] border border-[#E5E5EA] flex items-center gap-1.5">
+              <span className="text-xs font-semibold text-[#171717] px-2.5 py-1 rounded-lg bg-[#F3F3F0] border border-[#E7E5E0] flex items-center gap-1.5">
                 <span>{getCategory(selectedIncident.category).emoji}</span>
                 <span>{getCategory(selectedIncident.category).label}</span>
               </span>
@@ -835,24 +835,24 @@ export default function MapPage({ onNavigateReport }) {
                 {getSeverity(selectedIncident.severity).label}
               </span>
 
-              <span className="text-[11px] font-medium text-[#6E6E73] px-2 py-0.5 rounded bg-[#F5F5F7]">
+              <span className="text-[11px] font-medium text-[#626262] px-2 py-0.5 rounded bg-[#F3F3F0]">
                 {selectedIncident.dept}
               </span>
             </div>
 
-            <h3 className="text-sm sm:text-base font-semibold text-[#1D1D1F] leading-snug">
+            <h3 className="text-sm sm:text-base font-semibold text-[#171717] leading-snug">
               {selectedIncident.title}
             </h3>
 
-            <p className="text-xs text-[#6E6E73] leading-relaxed">
+            <p className="text-xs text-[#626262] leading-relaxed">
               {selectedIncident.description?.replace(/https?:\/\/[^\s]+/g, '').replace(/CBMi[A-Za-z0-9_-]{20,}/g, '').trim()}
             </p>
           </div>
 
           {/* 3. Verification & Confidence Status */}
-          <div className="p-3 rounded-xl bg-[#F5F5F7] border border-[#E5E5EA] space-y-1.5">
+          <div className="p-3 rounded-xl bg-[#F3F3F0] border border-[#E7E5E0] space-y-1.5">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-[#86868B] font-medium text-[11px]">Verification Status:</span>
+              <span className="text-[#858585] font-medium text-[11px]">Verification Status:</span>
               {selectedIncident.status === 'verified_resolved' ? (
                 <span className="badge-verified text-[11px]">
                   <CheckCircle2 className="w-3.5 h-3.5" /> Certified Ground Truth
@@ -872,40 +872,40 @@ export default function MapPage({ onNavigateReport }) {
               )}
             </div>
 
-            <div className="flex items-center justify-between text-[11px] text-[#1D1D1F] pt-1.5 border-t border-[#E5E5EA]">
-              <span className="text-[#86868B]">Corroboration:</span>
-              <span className="font-semibold text-[#0071E3]">
+            <div className="flex items-center justify-between text-[11px] text-[#171717] pt-1.5 border-t border-[#E7E5E0]">
+              <span className="text-[#858585]">Corroboration:</span>
+              <span className="font-semibold text-[#4F46E5]">
                 {selectedIncident.votes || 1} Independent Signals
               </span>
             </div>
           </div>
 
           {/* 4. Source & Original Source Link */}
-          <div className="p-3 rounded-xl bg-[#F5F5F7] border border-[#E5E5EA] space-y-1.5 text-xs">
+          <div className="p-3 rounded-xl bg-[#F3F3F0] border border-[#E7E5E0] space-y-1.5 text-xs">
             <div className="flex items-center justify-between">
-              <span className="text-[#86868B] text-[11px]">Reported By:</span>
-              <span className="font-semibold text-[#1D1D1F]">
+              <span className="text-[#858585] text-[11px]">Reported By:</span>
+              <span className="font-semibold text-[#171717]">
                 {selectedIncident.reporter_name || 'Verified Commuter'}
               </span>
             </div>
 
             {(selectedIncident.original_url || extractUrl(selectedIncident.description)) ? (
-              <div className="pt-1.5 border-t border-[#E5E5EA] flex items-center justify-between">
-                <span className="text-[#86868B] text-[11px]">External Feed:</span>
+              <div className="pt-1.5 border-t border-[#E7E5E0] flex items-center justify-between">
+                <span className="text-[#858585] text-[11px]">External Feed:</span>
                 <a
                   href={selectedIncident.original_url || extractUrl(selectedIncident.description)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#0071E3] hover:underline flex items-center gap-1 font-semibold text-xs truncate max-w-[200px]"
+                  className="text-[#4F46E5] hover:underline flex items-center gap-1 font-semibold text-xs truncate max-w-[200px]"
                 >
                   <span>Original Article Link</span>
                   <ExternalLink className="w-3 h-3 flex-shrink-0" />
                 </a>
               </div>
             ) : (
-              <div className="pt-1.5 border-t border-[#E5E5EA] flex items-center justify-between text-[11px] text-[#86868B]">
+              <div className="pt-1.5 border-t border-[#E7E5E0] flex items-center justify-between text-[11px] text-[#858585]">
                 <span>Source Channel:</span>
-                <span className="text-[#1D1D1F] font-medium">RASTA Citizen App (GPS Lock)</span>
+                <span className="text-[#171717] font-medium">RASTA Citizen App (GPS Lock)</span>
               </div>
             )}
           </div>
@@ -913,8 +913,8 @@ export default function MapPage({ onNavigateReport }) {
           {/* 5. Incident Photo (Before & After Resolution Comparison) */}
           {selectedIncident.evidence_url ? (
             <div className="grid grid-cols-2 gap-2">
-              <div className="rounded-xl overflow-hidden border border-[#E5E5EA] bg-[#F5F5F7]">
-                <span className="text-[9px] font-semibold text-[#86868B] uppercase px-2 py-0.5 block bg-white border-b border-[#E5E5EA]">
+              <div className="rounded-xl overflow-hidden border border-[#E7E5E0] bg-[#F3F3F0]">
+                <span className="text-[9px] font-semibold text-[#858585] uppercase px-2 py-0.5 block bg-white border-b border-[#E7E5E0]">
                   BEFORE: Citizen Photo
                 </span>
                 <img
@@ -924,8 +924,8 @@ export default function MapPage({ onNavigateReport }) {
                 />
               </div>
 
-              <div className="rounded-xl overflow-hidden border border-[#34C759]/30 bg-[#F0FDF4]">
-                <span className="text-[9px] font-semibold text-[#248A3D] uppercase px-2 py-0.5 block bg-[#E8F8EE] border-b border-[#34C759]/20">
+              <div className="rounded-xl overflow-hidden border border-[#15803D]/30 bg-[#F0FDF4]">
+                <span className="text-[9px] font-semibold text-[#15803D] uppercase px-2 py-0.5 block bg-[#15803D]/10 border-b border-[#15803D]/20">
                   AFTER: Resolution Proof
                 </span>
                 <img
@@ -937,7 +937,7 @@ export default function MapPage({ onNavigateReport }) {
             </div>
           ) : (
             selectedIncident.photo_url && (
-              <div className="rounded-xl overflow-hidden border border-[#E5E5EA] bg-[#F5F5F7] h-32 relative">
+              <div className="rounded-xl overflow-hidden border border-[#E7E5E0] bg-[#F3F3F0] h-32 relative">
                 <img
                   src={selectedIncident.photo_url}
                   alt="Hazard evidence"
@@ -951,18 +951,18 @@ export default function MapPage({ onNavigateReport }) {
           )}
 
           {/* 6. Location and Report Timestamp */}
-          <div className="p-3 rounded-xl bg-[#F5F5F7] border border-[#E5E5EA] space-y-1.5 text-xs">
-            <div className="flex items-start gap-1.5 text-[#1D1D1F]">
-              <MapPin className="w-3.5 h-3.5 text-[#0071E3] mt-0.5 flex-shrink-0" />
+          <div className="p-3 rounded-xl bg-[#F3F3F0] border border-[#E7E5E0] space-y-1.5 text-xs">
+            <div className="flex items-start gap-1.5 text-[#171717]">
+              <MapPin className="w-3.5 h-3.5 text-[#4F46E5] mt-0.5 flex-shrink-0" />
               <span className="font-medium text-xs leading-tight">{selectedIncident.address}</span>
             </div>
 
-            <div className="flex items-center justify-between text-[11px] text-[#86868B] pt-1.5 border-t border-[#E5E5EA]">
+            <div className="flex items-center justify-between text-[11px] text-[#858585] pt-1.5 border-t border-[#E7E5E0]">
               <span className="flex items-center gap-1">
-                <Clock className="w-3 h-3 text-[#86868B]" />
+                <Clock className="w-3 h-3 text-[#858585]" />
                 <span>Reported {timeAgo(selectedIncident.created_at)}</span>
               </span>
-              <span className="font-mono text-[#6E6E73]">
+              <span className="font-mono text-[#626262]">
                 {new Date(selectedIncident.created_at).toLocaleTimeString([], {
                   hour: '2-digit',
                   minute: '2-digit',
@@ -972,26 +972,26 @@ export default function MapPage({ onNavigateReport }) {
           </div>
 
           {/* 7. Current Workflow Status */}
-          <div className="flex items-center justify-between p-3 rounded-xl bg-[#F5F5F7] border border-[#E5E5EA] text-xs">
+          <div className="flex items-center justify-between p-3 rounded-xl bg-[#F3F3F0] border border-[#E7E5E0] text-xs">
             <div className="space-y-0.5">
-              <span className="text-[10px] text-[#86868B] uppercase font-medium">Triage Workflow</span>
-              <div className="font-semibold text-[#1D1D1F]">
+              <span className="text-[10px] text-[#858585] uppercase font-medium">Triage Workflow</span>
+              <div className="font-semibold text-[#171717]">
                 {getStatus(selectedIncident.status).label}
               </div>
             </div>
 
             <div className="text-right space-y-0.5">
-              <span className="text-[10px] text-[#86868B] uppercase font-medium">Department Wing</span>
-              <div className="font-semibold text-[#0071E3]">
+              <span className="text-[10px] text-[#858585] uppercase font-medium">Department Wing</span>
+              <div className="font-semibold text-[#4F46E5]">
                 {selectedIncident.dept}
               </div>
             </div>
           </div>
 
-          {/* 8. Prominent Confirmation / Upvote Action (Apple Blue) */}
+          {/* 8. Prominent Confirmation / Upvote Action (Sarvam Indigo) */}
           <button
             onClick={() => handleUpvote(selectedIncident.id)}
-            className="w-full min-h-[44px] bg-[#0071E3] hover:bg-[#0077ED] active:scale-[0.99] text-white rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-apple"
+            className="w-full min-h-[44px] bg-[#4F46E5] hover:bg-[#4338CA] active:scale-[0.99] text-white rounded-xl font-medium text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-sm"
           >
             <ThumbsUp className="w-4 h-4 text-white" />
             <span>

@@ -12,9 +12,9 @@ const adjustablePinIcon = L.divIcon({
     <div style="position:relative; width:32px; height:32px;">
       <div style="
         width: 32px; height: 32px; border-radius: 50% 50% 50% 0;
-        background: #0071E3; border: 3px solid #FFFFFF;
+        background: #4F46E5; border: 3px solid #FFFFFF;
         transform: rotate(-45deg);
-        box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+        box-shadow: 0 2px 8px rgba(79,70,229,0.3);
       "></div>
       <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:white; font-size:12px; font-weight:bold;">📍</div>
     </div>`,
@@ -270,63 +270,63 @@ export default function ReportPage({ onBack, onComplete }) {
     }, 700)
   }
 
-  // ── Apple-Style Digital Receipt Screen ────────────────────────────────────
+  // ── Digital Receipt Screen ────────────────────────────────────────────────
   if (createdReceipt) {
     const cat = getCategory(createdReceipt.category)
     const sev = getSeverity(createdReceipt.severity)
 
     return (
-      <div className="flex flex-col h-full bg-[#F5F5F7] p-4 sm:p-6 max-w-lg mx-auto w-full justify-center items-center pb-28 animate-fade-in">
-        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#E5E5EA] shadow-apple-lg w-full space-y-5 text-center">
-          <div className="w-16 h-16 bg-[#34C759]/10 text-[#34C759] rounded-2xl flex items-center justify-center mx-auto shadow-apple-sm">
+      <div className="flex flex-col h-full bg-[#FAF9F6] p-4 sm:p-8 max-w-xl mx-auto w-full justify-center items-center pb-28 animate-fade-in text-[#171717]">
+        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#E7E5E0] shadow-sm w-full space-y-5 text-center">
+          <div className="w-16 h-16 bg-emerald-50 text-[#15803D] border border-emerald-200 rounded-2xl flex items-center justify-center mx-auto shadow-sm">
             <CheckCircle2 className="w-9 h-9" />
           </div>
 
           <div>
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#0071E3] block">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#4F46E5] block">
               Official Hazard Logged
             </span>
-            <h2 className="text-2xl font-semibold tracking-tight text-[#1D1D1F] mt-1">
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#171717] mt-1">
               Ticket #{createdReceipt.id}
             </h2>
-            <p className="text-xs text-[#6E6E73] mt-1.5 leading-relaxed">
-              Synchronized to Public Safety Map and dispatched to municipal response crew.
+            <p className="text-xs text-[#626262] mt-1.5 leading-relaxed">
+              Synchronized to Public Safety Map and dispatched to municipal triage queue.
             </p>
           </div>
 
-          <div className="bg-[#F5F5F7] p-4 rounded-2xl border border-[#E5E5EA] text-left space-y-2.5 text-xs">
+          <div className="bg-[#F3F3F0] p-4 rounded-2xl border border-[#E7E5E0] text-left space-y-2.5 text-xs">
             <div className="flex justify-between items-center">
-              <span className="text-[#86868B]">Category:</span>
-              <span className="font-semibold text-[#1D1D1F] flex items-center gap-1.5">
+              <span className="text-[#858585]">Category:</span>
+              <span className="font-bold text-[#171717] flex items-center gap-1.5">
                 <span>{cat.emoji}</span> {cat.label}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-[#86868B]">Threat Rating:</span>
+              <span className="text-[#858585]">Threat Rating:</span>
               <span className={sev.badgeClass}>{sev.label}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-[#86868B]">Coordinates:</span>
-              <span className="font-mono text-[#6E6E73] text-[11px] truncate max-w-[180px]">
+              <span className="text-[#858585]">Coordinates:</span>
+              <span className="font-mono text-[#626262] text-[11px] truncate max-w-[180px]">
                 {createdReceipt.latitude.toFixed(4)}, {createdReceipt.longitude.toFixed(4)}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-[#86868B]">Assigned Wing:</span>
-              <span className="font-semibold text-[#0071E3]">{createdReceipt.dept}</span>
+              <span className="text-[#858585]">Assigned Wing:</span>
+              <span className="font-bold text-[#4F46E5]">{createdReceipt.dept}</span>
             </div>
           </div>
 
           <div className="flex gap-3 pt-2">
             <button
               onClick={() => onComplete('track')}
-              className="flex-1 py-3 px-4 rounded-xl border border-[#E5E5EA] bg-white hover:bg-[#F5F5F7] text-[#1D1D1F] font-semibold text-xs transition-colors cursor-pointer"
+              className="flex-1 py-3 px-4 rounded-xl border border-[#E7E5E0] bg-white hover:bg-[#F3F3F0] text-[#171717] font-semibold text-xs transition-colors cursor-pointer"
             >
               Track Ticket Status
             </button>
             <button
               onClick={() => onComplete('map')}
-              className="flex-1 py-3 px-4 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white font-semibold text-xs shadow-apple transition-colors cursor-pointer"
+              className="flex-1 py-3 px-4 rounded-xl bg-[#4F46E5] hover:bg-[#4338CA] text-white font-semibold text-xs shadow-sm transition-colors cursor-pointer"
             >
               View on Map
             </button>
@@ -339,32 +339,32 @@ export default function ReportPage({ onBack, onComplete }) {
   const stepsList = ['Evidence', 'Location', 'Hazard', 'Review']
 
   return (
-    <div className="flex flex-col h-full bg-[#F5F5F7] overflow-y-auto px-4 py-6 sm:px-6 max-w-lg mx-auto w-full space-y-5 pb-28">
+    <div className="flex flex-col h-full bg-[#FAF9F6] overflow-y-auto px-4 py-8 sm:px-8 max-w-2xl sm:max-w-3xl mx-auto w-full space-y-6 pb-28 text-[#171717]">
       {/* ── Top Bar ─────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between pb-3 border-b border-[#E5E5EA]">
+      <div className="flex items-center justify-between pb-3 border-b border-[#E7E5E0]">
         <button
           onClick={currentStep > 0 ? () => setCurrentStep(s => s - 1) : onBack}
-          className="p-2 -ml-2 text-[#6E6E73] hover:text-[#1D1D1F] rounded-lg cursor-pointer transition-colors"
+          className="p-2 -ml-2 text-[#626262] hover:text-[#171717] rounded-xl cursor-pointer transition-colors"
           aria-label="Go back"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <span className="text-xs font-semibold text-[#1D1D1F]">Report a Road Hazard</span>
-        <span className="text-xs font-medium text-[#86868B]">Step {currentStep + 1} of 4</span>
+        <span className="text-xs font-bold text-[#171717]">Report a Road Hazard</span>
+        <span className="text-xs font-medium text-[#858585]">Step {currentStep + 1} of 4</span>
       </div>
 
       {/* ── Segmented Progress Bar ──────────────────────────────────── */}
-      <div className="grid grid-cols-4 gap-1.5">
+      <div className="grid grid-cols-4 gap-2">
         {stepsList.map((s, idx) => (
-          <div key={s} className="space-y-1">
+          <div key={s} className="space-y-1.5">
             <div
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                idx <= currentStep ? 'bg-[#0071E3]' : 'bg-[#E5E5EA]'
+                idx <= currentStep ? 'bg-[#4F46E5]' : 'bg-[#E7E5E0]'
               }`}
             />
             <p
-              className={`text-[10px] font-medium text-center truncate ${
-                idx === currentStep ? 'text-[#0071E3] font-semibold' : 'text-[#86868B]'
+              className={`text-[10px] font-semibold text-center truncate ${
+                idx === currentStep ? 'text-[#4F46E5]' : 'text-[#858585]'
               }`}
             >
               {s}
@@ -377,21 +377,21 @@ export default function ReportPage({ onBack, onComplete }) {
       {/* STEP 0: EVIDENCE CAPTURE (Photo + Voice Note)                   */}
       {/* ═════════════════════════════════════════════════════════════════ */}
       {currentStep === 0 && (
-        <div className="space-y-4 animate-fade-in">
+        <div className="space-y-5 animate-fade-in">
           <div>
-            <h2 className="text-base font-semibold text-[#1D1D1F]">1. Capture Visual Evidence</h2>
-            <p className="text-xs text-[#6E6E73] mt-0.5">
-              A photograph guarantees rapid municipal dispatch and authenticates your report.
+            <h2 className="text-lg font-bold text-[#171717]">1. Capture Visual Evidence</h2>
+            <p className="text-xs text-[#626262] mt-1 leading-relaxed">
+              A photograph guarantees rapid municipal dispatch and authenticates your hazard report.
             </p>
           </div>
 
           {/* Photo Dropzone Card */}
           {photo ? (
-            <div className="relative rounded-2xl overflow-hidden aspect-video border border-[#E5E5EA] shadow-apple-sm">
+            <div className="relative rounded-2xl overflow-hidden aspect-video border border-[#E7E5E0] shadow-sm">
               <img src={photo} alt="Hazard preview" className="w-full h-full object-cover" />
               <button
                 onClick={() => setPhoto(null)}
-                className="absolute top-2.5 right-2.5 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full cursor-pointer transition-all"
+                className="absolute top-3 right-3 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full cursor-pointer transition-all"
                 aria-label="Remove photo"
               >
                 <X className="w-4 h-4" />
@@ -400,34 +400,34 @@ export default function ReportPage({ onBack, onComplete }) {
           ) : (
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="w-full aspect-[21/9] rounded-2xl border-2 border-dashed border-[#E5E5EA] hover:border-[#0071E3] bg-white flex flex-col items-center justify-center gap-2 transition-all text-[#6E6E73] hover:text-[#1D1D1F] cursor-pointer group shadow-apple-sm"
+              className="w-full aspect-[21/9] rounded-2xl border-2 border-dashed border-[#E7E5E0] hover:border-[#4F46E5] bg-white flex flex-col items-center justify-center gap-2 transition-all text-[#626262] hover:text-[#171717] cursor-pointer group shadow-sm"
             >
-              <div className="w-12 h-12 rounded-xl bg-[#0071E3]/10 group-hover:bg-[#0071E3]/15 text-[#0071E3] flex items-center justify-center transition-colors">
+              <div className="w-12 h-12 rounded-xl bg-[#EEF2FF] group-hover:bg-[#E0E7FF] text-[#4F46E5] flex items-center justify-center transition-colors border border-[#E0E7FF]">
                 <Camera className="w-6 h-6" />
               </div>
-              <span className="text-xs font-semibold text-[#1D1D1F]">Tap to capture or choose photo</span>
-              <span className="text-[10px] text-[#86868B]">Camera or device gallery</span>
+              <span className="text-xs font-bold text-[#171717]">Tap to capture or choose photo</span>
+              <span className="text-[10px] text-[#858585]">Camera or device gallery</span>
             </button>
           )}
           <input ref={fileInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handlePhotoUpload} />
 
           {/* Optional Voice Note Memo */}
-          <div className="bg-white p-4 rounded-2xl border border-[#E5E5EA] shadow-apple-sm space-y-2">
+          <div className="bg-white p-4.5 rounded-2xl border border-[#E7E5E0] shadow-sm space-y-2.5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div
-                  className={`w-9 h-9 rounded-xl flex items-center justify-center ${
-                    isRecordingAudio ? 'bg-[#FF3B30] text-white animate-pulse' : 'bg-[#F5F5F7] text-[#0071E3]'
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                    isRecordingAudio ? 'bg-rose-500 text-white animate-pulse' : 'bg-[#EEF2FF] text-[#4F46E5] border border-[#E0E7FF]'
                   }`}
                 >
-                  <Mic className="w-4.5 h-4.5" />
+                  <Mic className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-[#1D1D1F]">
+                  <p className="text-xs font-bold text-[#171717]">
                     {isRecordingAudio ? `Recording (${recordingSeconds}s)...` : audioUrl ? 'Voice Note Attached' : 'Voice Memo (Optional)'}
                   </p>
-                  <p className="text-[10px] text-[#86868B]">
-                    {isRecordingAudio ? 'Speak now in Hindi, Kannada or English' : 'Hands-free voice note for fast description'}
+                  <p className="text-[10px] text-[#858585]">
+                    {isRecordingAudio ? 'Speak now in Hindi, Kannada or English' : 'Hands-free voice note for quick description'}
                   </p>
                 </div>
               </div>
@@ -435,23 +435,23 @@ export default function ReportPage({ onBack, onComplete }) {
               {isRecordingAudio ? (
                 <button
                   onClick={stopRecordingAudio}
-                  className="px-3 py-1.5 rounded-xl bg-[#FF3B30] text-white text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-xl bg-rose-600 text-white text-xs font-bold flex items-center gap-1 cursor-pointer"
                 >
                   <Square className="w-3 h-3 fill-current" /> Stop
                 </button>
               ) : audioUrl ? (
                 <div className="flex items-center gap-2">
                   <audio src={audioUrl} controls className="h-7 w-28" />
-                  <button onClick={deleteRecording} className="p-1.5 text-[#86868B] hover:text-[#FF3B30] cursor-pointer">
+                  <button onClick={deleteRecording} className="p-1.5 text-[#858585] hover:text-[#C62828] cursor-pointer">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               ) : (
                 <button
                   onClick={startRecordingAudio}
-                  className="px-3 py-1.5 rounded-xl bg-[#F5F5F7] hover:bg-[#E5E5EA] text-[#0071E3] text-xs font-semibold flex items-center gap-1 cursor-pointer transition-colors"
+                  className="px-3.5 py-1.5 rounded-xl bg-[#F3F3F0] hover:bg-[#E7E5E0] text-[#171717] text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition-colors border border-[#E7E5E0]"
                 >
-                  <Mic className="w-3.5 h-3.5" /> Record
+                  <Mic className="w-3.5 h-3.5 text-[#4F46E5]" /> Record
                 </button>
               )}
             </div>
@@ -459,7 +459,7 @@ export default function ReportPage({ onBack, onComplete }) {
 
           <button
             onClick={() => setCurrentStep(1)}
-            className="w-full bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-semibold py-3.5 rounded-xl shadow-apple transition-colors cursor-pointer min-h-[44px]"
+            className="w-full bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-bold py-3.5 rounded-xl shadow-sm transition-colors cursor-pointer min-h-[44px]"
           >
             <span>Confirm Location →</span>
           </button>
@@ -470,35 +470,35 @@ export default function ReportPage({ onBack, onComplete }) {
       {/* STEP 1: LOCATION AUTO-LOCK & INTERACTIVE PIN ADJUSTMENT         */}
       {/* ═════════════════════════════════════════════════════════════════ */}
       {currentStep === 1 && (
-        <div className="space-y-4 animate-fade-in">
+        <div className="space-y-5 animate-fade-in">
           <div>
-            <h2 className="text-base font-semibold text-[#1D1D1F]">2. Confirm Precise Location</h2>
-            <p className="text-xs text-[#6E6E73] mt-0.5">
+            <h2 className="text-lg font-bold text-[#171717]">2. Confirm Precise Location</h2>
+            <p className="text-xs text-[#626262] mt-1 leading-relaxed">
               Auto-detect GPS or tap the map to place the pin on the exact side of the road.
             </p>
           </div>
 
           {/* Current Address Card */}
-          <div className="bg-white p-4 rounded-2xl border border-[#E5E5EA] shadow-apple-sm space-y-2">
+          <div className="bg-white p-4.5 rounded-2xl border border-[#E7E5E0] shadow-sm space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-semibold text-[#0071E3] uppercase">{location.accuracy}</span>
+              <span className="text-[10px] font-bold text-[#4F46E5] uppercase">{location.accuracy}</span>
               <button
                 onClick={triggerGps}
                 disabled={locLoading}
-                className="text-xs text-[#0071E3] hover:underline flex items-center gap-1 cursor-pointer font-medium"
+                className="text-xs text-[#4F46E5] hover:underline flex items-center gap-1.5 cursor-pointer font-semibold"
               >
                 {locLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
                 <span>Refresh GPS</span>
               </button>
             </div>
-            <p className="text-xs font-semibold text-[#1D1D1F] leading-tight">📍 {location.address}</p>
-            <p className="text-[10px] font-mono text-[#86868B]">
+            <p className="text-xs font-bold text-[#171717] leading-tight">📍 {location.address}</p>
+            <p className="text-[10px] font-mono text-[#858585]">
               {location.latitude.toFixed(5)}, {location.longitude.toFixed(5)}
             </p>
           </div>
 
           {/* Interactive Mini Map to Tap and Reposition Pin */}
-          <div className="rounded-2xl overflow-hidden border border-[#E5E5EA] h-56 relative shadow-apple-sm">
+          <div className="rounded-2xl overflow-hidden border border-[#E7E5E0] h-60 relative shadow-sm">
             <MapContainer
               center={[location.latitude, location.longitude]}
               zoom={15}
@@ -514,13 +514,13 @@ export default function ReportPage({ onBack, onComplete }) {
                 onLocationChange={handleMapPinMove}
               />
             </MapContainer>
-            <div className="absolute top-2 left-2 z-10 bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-lg border border-[#E5E5EA] text-[10px] text-[#1D1D1F] font-medium shadow-apple-sm">
+            <div className="absolute top-2.5 left-2.5 z-10 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-[#E7E5E0] text-[10px] text-[#171717] font-semibold shadow-sm">
               💡 Tap anywhere to adjust pin
             </div>
           </div>
 
           {locPermissionDenied && (
-            <div className="p-3 rounded-xl bg-[#FFF4E5] border border-[#FF9500]/30 text-[#C96E00] text-xs flex items-center gap-2">
+            <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-[#B7791F] text-xs flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 flex-shrink-0" />
               <span>Location permission unavailable. Tap the map to set location manually.</span>
             </div>
@@ -528,7 +528,7 @@ export default function ReportPage({ onBack, onComplete }) {
 
           <button
             onClick={() => setCurrentStep(2)}
-            className="w-full bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-semibold py-3.5 rounded-xl shadow-apple transition-colors cursor-pointer min-h-[44px]"
+            className="w-full bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-bold py-3.5 rounded-xl shadow-sm transition-colors cursor-pointer min-h-[44px]"
           >
             <span>Select Hazard Category →</span>
           </button>
@@ -539,16 +539,16 @@ export default function ReportPage({ onBack, onComplete }) {
       {/* STEP 2: HAZARD CATEGORY & DETAILS (WITH VOICE DICTATION)         */}
       {/* ═════════════════════════════════════════════════════════════════ */}
       {currentStep === 2 && (
-        <div className="space-y-4 animate-fade-in">
+        <div className="space-y-5 animate-fade-in">
           <div>
-            <h2 className="text-base font-semibold text-[#1D1D1F]">3. Select Hazard Type</h2>
-            <p className="text-xs text-[#6E6E73] mt-0.5">
+            <h2 className="text-lg font-bold text-[#171717]">3. Select Hazard Type</h2>
+            <p className="text-xs text-[#626262] mt-1 leading-relaxed">
               Routes directly to the responsible municipal department.
             </p>
           </div>
 
           {/* 6 Category Tiles */}
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-3">
             {HAZARD_CATEGORIES.map(c => {
               const isSelected = category === c.id
               return (
@@ -558,16 +558,16 @@ export default function ReportPage({ onBack, onComplete }) {
                     setCategory(c.id)
                     setSeverity(c.defaultSeverity)
                   }}
-                  className={`p-3.5 rounded-2xl border text-left transition-all flex items-start gap-2.5 cursor-pointer min-h-[58px] ${
+                  className={`p-4 rounded-2xl border text-left transition-all flex items-start gap-3 cursor-pointer min-h-[64px] ${
                     isSelected
-                      ? 'bg-[#0071E3]/5 border-[#0071E3] ring-2 ring-[#0071E3]/20 shadow-apple-sm'
-                      : 'bg-white border-[#E5E5EA] text-[#6E6E73] hover:border-[#D2D2D7] shadow-apple-sm'
+                      ? 'bg-[#EEF2FF] border-[#4F46E5] ring-2 ring-[#4F46E5]/20 shadow-sm'
+                      : 'bg-white border-[#E7E5E0] text-[#626262] hover:border-[#D1CFCA] shadow-sm'
                   }`}
                 >
                   <span className="text-2xl flex-shrink-0">{c.emoji}</span>
                   <div className="min-w-0">
-                    <span className="text-xs font-semibold text-[#1D1D1F] block truncate">{c.label}</span>
-                    <span className="text-[10px] text-[#86868B] block truncate mt-0.5">{c.dept}</span>
+                    <span className="text-xs font-bold text-[#171717] block truncate">{c.label}</span>
+                    <span className="text-[10px] text-[#858585] block truncate mt-0.5">{c.dept}</span>
                   </div>
                 </button>
               )
@@ -576,18 +576,18 @@ export default function ReportPage({ onBack, onComplete }) {
 
           {/* Threat Urgency */}
           <div>
-            <label className="text-[11px] font-semibold uppercase tracking-wider text-[#6E6E73] mb-1.5 block">
+            <label className="text-[11px] font-bold uppercase tracking-wider text-[#858585] mb-2 block">
               Threat Urgency
             </label>
-            <div className="grid grid-cols-4 gap-1.5">
+            <div className="grid grid-cols-4 gap-2">
               {SEVERITY_LEVELS.map(s => (
                 <button
                   key={s.id}
                   onClick={() => setSeverity(s.id)}
                   className={`py-2 px-1 rounded-xl border text-center transition-all cursor-pointer min-h-[44px] ${
                     severity === s.id
-                      ? `${s.badgeClass} ring-2 ring-black/10 font-bold`
-                      : 'bg-white border-[#E5E5EA] text-[#86868B] hover:text-[#1D1D1F]'
+                      ? `${s.badgeClass} ring-2 ring-[#171717]/10 font-bold`
+                      : 'bg-white border-[#E7E5E0] text-[#858585] hover:text-[#171717]'
                   }`}
                 >
                   <p className="text-xs font-semibold">{s.label}</p>
@@ -597,18 +597,18 @@ export default function ReportPage({ onBack, onComplete }) {
           </div>
 
           {/* Voice Dictation / Typed Description */}
-          <div className="space-y-1.5">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-[11px] font-semibold uppercase tracking-wider text-[#6E6E73]">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-[#858585]">
                 Description / Landmark
               </label>
               <button
                 onClick={toggleSpeechRecognition}
-                className={`text-[11px] font-semibold flex items-center gap-1 cursor-pointer transition-colors ${
-                  isDictating ? 'text-[#FF3B30] animate-pulse' : 'text-[#0071E3] hover:underline'
+                className={`text-[11px] font-semibold flex items-center gap-1.5 cursor-pointer transition-colors ${
+                  isDictating ? 'text-rose-600 animate-pulse' : 'text-[#4F46E5] hover:underline'
                 }`}
               >
-                <Mic className="w-3 h-3" />
+                <Mic className="w-3.5 h-3.5" />
                 <span>{isDictating ? 'Transcribing...' : 'Dictate with Voice'}</span>
               </button>
             </div>
@@ -617,14 +617,14 @@ export default function ReportPage({ onBack, onComplete }) {
               rows={2}
               value={description}
               onChange={e => setDescription(e.target.value)}
-              placeholder="e.g. Near petrol pump on left lane, sharp iron edges visible..."
-              className="w-full bg-white border border-[#E5E5EA] rounded-xl p-3 text-xs text-[#1D1D1F] placeholder-[#86868B] focus:outline-none focus:border-[#0071E3] resize-none shadow-apple-sm transition-colors"
+              placeholder="e.g. Near petrol pump on left lane, exposed wire sparking..."
+              className="w-full bg-white border border-[#E7E5E0] rounded-xl p-3.5 text-xs text-[#171717] placeholder-[#858585] focus:outline-none focus:border-[#4F46E5] resize-none shadow-sm transition-colors"
             />
           </div>
 
           <button
             onClick={() => setCurrentStep(3)}
-            className="w-full bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-semibold py-3.5 rounded-xl shadow-apple transition-colors cursor-pointer min-h-[44px]"
+            className="w-full bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-bold py-3.5 rounded-xl shadow-sm transition-colors cursor-pointer min-h-[44px]"
           >
             <span>Review & Submit →</span>
           </button>
@@ -635,40 +635,40 @@ export default function ReportPage({ onBack, onComplete }) {
       {/* STEP 3: REVIEW & SUBMIT                                         */}
       {/* ═════════════════════════════════════════════════════════════════ */}
       {currentStep === 3 && (
-        <div className="space-y-4 animate-fade-in">
+        <div className="space-y-5 animate-fade-in">
           <div>
-            <h2 className="text-base font-semibold text-[#1D1D1F]">4. Final Verification & Submit</h2>
-            <p className="text-xs text-[#6E6E73] mt-0.5">
+            <h2 className="text-lg font-bold text-[#171717]">4. Final Verification & Submit</h2>
+            <p className="text-xs text-[#626262] mt-1 leading-relaxed">
               Confirm details before dispatching to the municipal safety queue.
             </p>
           </div>
 
-          <div className="bg-white p-4 rounded-2xl border border-[#E5E5EA] shadow-apple-sm space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-[#E5E5EA]">
-              <div className="flex items-center gap-2">
+          <div className="bg-white p-5 rounded-2xl border border-[#E7E5E0] shadow-sm space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E7E5E0]">
+              <div className="flex items-center gap-3">
                 <span className="text-2xl">{getCategory(category).emoji}</span>
                 <div>
-                  <h3 className="text-xs font-semibold text-[#1D1D1F]">{getCategory(category).label}</h3>
-                  <span className="text-[10px] text-[#0071E3] font-medium">Wing: {getCategory(category).dept}</span>
+                  <h3 className="text-xs font-bold text-[#171717]">{getCategory(category).label}</h3>
+                  <span className="text-[10px] text-[#4F46E5] font-semibold">Wing: {getCategory(category).dept}</span>
                 </div>
               </div>
               <span className={getSeverity(severity).badgeClass}>{severity.toUpperCase()}</span>
             </div>
 
-            <div className="space-y-1.5 text-xs">
-              <p className="text-[#6E6E73] flex items-start gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-[#0071E3] mt-0.5 flex-shrink-0" />
-                <span className="text-[#1D1D1F] font-medium">{location.address}</span>
+            <div className="space-y-2 text-xs">
+              <p className="text-[#626262] flex items-start gap-2">
+                <MapPin className="w-3.5 h-3.5 text-[#4F46E5] mt-0.5 flex-shrink-0" />
+                <span className="text-[#171717] font-semibold">{location.address}</span>
               </p>
               {description && (
-                <p className="text-[#6E6E73] pl-5 italic text-[11px]">
+                <p className="text-[#626262] pl-5 italic text-[11px]">
                   "{description}"
                 </p>
               )}
             </div>
 
             {photo && (
-              <div className="rounded-xl overflow-hidden border border-[#E5E5EA] h-24">
+              <div className="rounded-xl overflow-hidden border border-[#E7E5E0] h-28">
                 <img src={photo} alt="Hazard review" className="w-full h-full object-cover" />
               </div>
             )}
@@ -676,14 +676,14 @@ export default function ReportPage({ onBack, onComplete }) {
 
           {/* Submission Progress */}
           {submitting && (
-            <div className="bg-white p-3.5 rounded-2xl border border-[#E5E5EA] space-y-1.5 text-center shadow-apple-sm">
-              <div className="flex items-center justify-between text-xs font-medium text-[#0071E3]">
+            <div className="bg-white p-4 rounded-2xl border border-[#E7E5E0] space-y-2 text-center shadow-sm">
+              <div className="flex items-center justify-between text-xs font-semibold text-[#4F46E5]">
                 <span>Transmitting to RASTA Gateway...</span>
                 <span>{uploadProgress}%</span>
               </div>
-              <div className="w-full bg-[#F5F5F7] h-1.5 rounded-full overflow-hidden">
+              <div className="w-full bg-[#F3F3F0] h-1.5 rounded-full overflow-hidden">
                 <div
-                  className="bg-[#0071E3] h-full transition-all duration-150"
+                  className="bg-[#4F46E5] h-full transition-all duration-150"
                   style={{ width: `${uploadProgress}%` }}
                 />
               </div>
@@ -693,7 +693,7 @@ export default function ReportPage({ onBack, onComplete }) {
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="w-full bg-[#0071E3] hover:bg-[#0077ED] text-white text-sm font-semibold py-3.5 rounded-xl shadow-apple transition-colors cursor-pointer min-h-[48px] flex items-center justify-center gap-2"
+            className="w-full bg-[#4F46E5] hover:bg-[#4338CA] text-white text-sm font-bold py-3.5 rounded-xl shadow-sm transition-colors cursor-pointer min-h-[48px] flex items-center justify-center gap-2"
           >
             {submitting ? (
               <><Loader2 className="w-5 h-5 animate-spin" /> Publishing Official Report...</>
