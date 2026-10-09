@@ -797,10 +797,20 @@ export default function MapPage({ onNavigateReport }) {
 
           {/* 1. Incident ID and Close Button */}
           <div className="flex items-center justify-between pb-2 border-b border-[#334155]">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="text-xs font-mono font-black text-[#43D9C2] px-2 py-0.5 rounded bg-[#151F30] border border-[#334155]">
                 {selectedIncident.id}
               </span>
+              {selectedIncident.isDemo ? (
+                <span className="px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[10px] font-bold uppercase tracking-wider">
+                  ⚠️ DEMO — NOT A LIVE INCIDENT
+                </span>
+              ) : (
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span>AUTHENTIC LIVE SIGNAL</span>
+                </span>
+              )}
               <span className="text-[10px] font-mono text-[#94A3B8] uppercase">
                 {selectedIncident.city || 'bengaluru'} Jurisdiction
               </span>
@@ -837,7 +847,7 @@ export default function MapPage({ onNavigateReport }) {
             </h3>
 
             <p className="text-xs text-[#CBD5E1] leading-relaxed">
-              {selectedIncident.description}
+              {selectedIncident.description?.replace(/https?:\/\/[^\s]+/g, '').replace(/CBMi[A-Za-z0-9_-]{20,}/g, '').trim()}
             </p>
           </div>
 
@@ -881,11 +891,11 @@ export default function MapPage({ onNavigateReport }) {
               </span>
             </div>
 
-            {extractUrl(selectedIncident.description) ? (
+            {(selectedIncident.original_url || extractUrl(selectedIncident.description)) ? (
               <div className="pt-1 border-t border-[#334155]/60 flex items-center justify-between">
                 <span className="text-[#94A3B8] text-[11px]">External Feed:</span>
                 <a
-                  href={extractUrl(selectedIncident.description)}
+                  href={selectedIncident.original_url || extractUrl(selectedIncident.description)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#43D9C2] hover:underline flex items-center gap-1 font-semibold text-xs truncate max-w-[200px]"

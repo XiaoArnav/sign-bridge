@@ -1,10 +1,12 @@
 import React from 'react'
 import { PlusCircle, Map, FileText, Bell, AlertTriangle, ShieldCheck, ChevronRight, Navigation, Sparkles } from 'lucide-react'
 import { hazardStore } from '../lib/hazardStore.js'
+import { getActiveConnectorsCount } from '../lib/ingestionEngine.js'
 
 export default function CitizenHome({ onNavigate }) {
   const stats = hazardStore.getStats()
   const myReports = hazardStore.getMyReports()
+  const activeCount = getActiveConnectorsCount()
 
   return (
     <div className="flex flex-col h-full bg-midnight overflow-y-auto p-4 sm:p-6 max-w-xl mx-auto w-full space-y-5 pb-24">
@@ -38,9 +40,9 @@ export default function CitizenHome({ onNavigate }) {
         <div className="mt-3 pt-2.5 border-t border-surface-border/60 flex items-center justify-between text-[10px] font-mono text-rastaText-muted">
           <span className="flex items-center gap-1.5 text-teal">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-            <span>4 Multi-Source Feeds Active</span>
+            <span>{activeCount} Feeds Connected</span>
           </span>
-          <span className="text-rastaText-secondary">NDMA SACHET · News RSS · IMD</span>
+          <span className="text-rastaText-secondary">NDMA SACHET · News RSS</span>
         </div>
       </div>
 

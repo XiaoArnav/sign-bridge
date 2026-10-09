@@ -10,7 +10,7 @@
  * T = Time waiting for action (normalized aging factor) (0-100)
  */
 
-export function calculatePriorityScore(hazard) {
+export function calculatePriorityScore(hazard = {}) {
   // 1. Physical Severity (S)
   const severityBase = {
     critical: 100, // Imminent threat to life (open manhole, live wire)
@@ -18,32 +18,34 @@ export function calculatePriorityScore(hazard) {
     medium: 45,    // Footpath breakage, minor hazards
     low: 20,       // Cosmetic or minor nuisance
   }
-  const S = severityBase[hazard.severity] || 40
+  const S = severityBase[hazard?.severity] || 40
 
   // 2. Exposure Factor (E) based on road classification
   // In our model: school zones, arterial roads, bus stations have highest exposure
-  const locationText = (hazard.address || '').toLowerCase()
+  const locationText = String(hazard?.address || hazard?.title || '').toLowerCase()
   let E = 50 // default baseline
-  if (locationText.includes('station') || locationText.includes('bus') || locationText.includes('school') || locationText.includes('main')) {
+  if (locationText.includes('station') || locationText.includes('bus') || locationText.includes('school') || locationText.includes('main') || locationText.includes('ring road') || locationText.includes('highway')) {
     E = 95
-  } else if (locationText.includes('market') || locationText.includes('layout') || locationText.includes('road')) {
+  } else if (locationText.includes('market') || locationText.includes('layout') || locationText.includes('road') || locationText.includes('junction') || locationText.includes('bridge')) {
     E = 75
   } else {
-    E = 40
+    E = 45
   }
 
-  // 3. Corroboration Factor (C) based on verified citizen upvotes
+  // 3. Corroboration Factor (C) based on verified citizen upvotes & multi-source signals
   // 1 vote = 20, 5 votes = 60, 15+ votes = 100
-  const votes = hazard.votes || 1
-  const C = Math.min(100, Math.round(votes * 5 + 15))
+  const votes = Math.max(1, Number(hazard?.votes) || 1)
+  const C = Math.min(100, Math.max(15, Math.round(votes * 5 + 15)))
 
   // 4. Time Waiting Factor (T)
   // Increases as report sits unaddressed
-  const ageHours = (Date.now() - new Date(hazard.createdAt).getTime()) / (1000 * 60 * 60)
-  const T = Math.min(100, Math.round(ageHours * 4 + 10))
+  const createdTimestamp = Date.parse(hazard?.createdAt || hazard?.created_at || '') || Date.now()
+  const ageHours = Math.max(0, (Date.now() - createdTimestamp) / (1000 * 60 * 60))
+  const T = Math.min(100, Math.max(10, Math.round(ageHours * 4 + 10)))
 
-  // Final Priority Calculation
-  const finalScore = Math.round(0.50 * S + 0.20 * E + 0.15 * C + 0.15 * T)
+  // Final Priority Calculation (P = 0.50S + 0.20E + 0.15C + 0.15T)
+  const rawScore = 0.50 * S + 0.20 * E + 0.15 * C + 0.15 * T
+  const finalScore = Math.min(100, Math.max(0, Math.round(Number.isFinite(rawScore) ? rawScore : 50)))
 
   return {
     score: finalScore,

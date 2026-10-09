@@ -53,7 +53,18 @@ export default function AlertsPage({ onSelectIncident }) {
               </p>
 
               <div className="flex items-center justify-between pt-2 border-t border-surface-border/60 text-[11px]">
-                <span className="font-mono text-teal font-semibold">Incident #{alert.incidentId}</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-teal font-semibold">Incident #{alert.incidentId}</span>
+                  {alert.isDemo ? (
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30 uppercase">
+                      DEMO
+                    </span>
+                  ) : (
+                    <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 uppercase">
+                      LIVE
+                    </span>
+                  )}
+                </div>
                 <span className="text-rastaText-muted flex items-center gap-1 group-hover:text-teal">
                   Inspect Incident <ChevronRight className="w-3.5 h-3.5" />
                 </span>

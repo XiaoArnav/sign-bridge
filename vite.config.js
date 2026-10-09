@@ -5,6 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    port: 5175,
+    host: true,
     proxy: {
       // Proxy 1: NDMA SACHET National Disaster Alert RSS Feed
       '/api/sachet': {
